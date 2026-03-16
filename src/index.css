@@ -1,0 +1,120 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Noto+Sans+KR:wght@400;500;700;900&family=Outfit:wght@700;900&display=swap');
+
+@theme {
+  --color-primary: #1A237E;
+  --color-secondary: #D32F2F;
+  --color-accent: #FFD700;
+
+  --font-sans: "Inter", "Noto Sans KR", sans-serif;
+  --font-display: "Outfit", "Noto Sans KR", sans-serif;
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #f8fafc;
+    color: #1e293b;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+}
+
+@layer utilities {
+
+  /* 프리미엄 카드 스타일 */
+  .premium-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(241, 245, 249, 0.8);
+    overflow: hidden;
+    transition: all 0.25s ease;
+  }
+
+  .premium-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+
+  /* 기본 버튼 */
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+
+  /* 포인트 버튼 */
+  .btn-accent {
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    padding: 14px 24px;
+    border-radius: 16px;
+    font-weight: 900;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    letter-spacing: -0.3px;
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+  }
+
+  .btn-accent:active {
+    transform: scale(0.97);
+  }
+
+  /* 유리 패널 */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* 스크롤바 숨기기 (모바일) */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 모바일 커서 */
+  .tap-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
