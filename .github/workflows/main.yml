@@ -1,0 +1,31 @@
+name: K-Quest CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Project Scan
+      run: |
+        echo "Scanning Project Files..."
+        ls -R
+        
+    - name: Deployment to GitHub Pages
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: . # 빌드 결과물이 루트에 있는 경우
+        branch: gh-pages # 배포될 브랜치
