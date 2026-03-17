@@ -1,194 +1,207 @@
-<!-- 서울 지역 전용 스타일 -->
-<style>
-    .river-line {
-        height: 6px;
-        background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #60a5fa 100%);
-        border-radius: 999px;
-        position: relative;
-        overflow: hidden;
-    }
-    .river-line::after {
-        content: "";
-        position: absolute;
-        top: 0; left: -100%;
-        width: 100%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        animation: flow 3s infinite linear;
-    }
-    @keyframes flow {
-        0% { left: -100%; }
-        100% { left: 100%; }
-    }
-    .seoul-region-card {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid #f1f5f9;
-        background: white;
-    }
-    .seoul-region-card:active {
-        transform: scale(0.96);
-        background-color: #f0f7ff;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fadeIn {
-        animation: fadeIn 0.5s ease-out forwards;
-    }
-</style>
-
-<!-- 본문 컨텐츠 영역 -->
-<div class="opacity-0 animate-fadeIn">
-    <!-- Guide Section -->
-    <section class="px-6 py-8">
-        <h2 id="seoul-guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
-            어느 구역부터<br>탐험해 볼까요?
-        </h2>
-        <p id="seoul-guide-sub" class="text-slate-500 mt-2 text-sm font-bold">미션을 수행할 서울의 구역을 선택하세요.</p>
-    </section>
-
-    <!-- Region Cards Grid (North of River) -->
-    <section class="px-4">
-        <div class="grid grid-cols-3 gap-3 mb-6">
-            <!-- NW: Northwestern Zone -->
-            <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="alert('서북권 미션 준비 중!')">
-                <div class="text-3xl mb-1">🎬</div>
-                <span id="label-nw" class="text-[11px] font-black text-slate-900">서북권</span>
-                <p id="desc-nw" class="text-[9px] text-slate-400 font-bold mt-1 leading-tight text-center">마포·은평·서대문</p>
-            </div>
-
-            <!-- Downtown: Central Seoul -->
-            <div class="seoul-region-card rounded-2xl p-4 shadow-md border-2 border-indigo-500 flex flex-col items-center justify-center text-center cursor-pointer h-32 ring-4 ring-indigo-50" onclick="alert('도심권 미션 준비 중!')">
-                <div class="text-3xl mb-1">⛰️</div>
-                <span id="label-central" class="text-[11px] font-black text-indigo-900">강북</span>
-                <p id="desc-central" class="text-[9px] text-indigo-400 font-bold mt-1 leading-tight text-center">종로·중구·용산</p>
-            </div>
-
-            <!-- NE: Northeastern Zone -->
-            <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="alert('동북권 미션 준비 중!')">
-                <div class="text-3xl mb-1">✂️</div>
-                <span id="label-ne" class="text-[11px] font-black text-slate-900">동북권</span>
-                <p id="desc-ne" class="text-[8px] text-slate-400 font-bold mt-1 leading-tight text-center">동대문·노원·도봉·성북</p>
-            </div>
-        </div>
-
-        <!-- Han River Divider -->
-        <div class="flex items-center gap-3 px-2 mb-6 text-blue-500 font-black italic text-[10px] tracking-widest uppercase">
-            <div class="river-line flex-grow"></div>
-            <span id="seoul-river-text">Han River</span>
-            <div class="river-line flex-grow"></div>
-        </div>
-
-        <!-- Region Cards Grid (South of River) -->
-        <div class="grid grid-cols-3 gap-3">
-            <!-- SW: Southwestern Zone -->
-            <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="alert('서남권 미션 준비 중!')">
-                <div class="text-3xl mb-1">👜</div>
-                <span id="label-sw" class="text-[11px] font-black text-slate-900">서남권</span>
-                <p id="desc-sw" class="text-[9px] text-slate-400 font-bold mt-1 leading-tight text-center">강서·영등포·구로·양천</p>
-            </div>
-
-            <!-- Gangnam: Gangnam Zone (Southeast-Center) -->
-            <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="alert('강남권 미션 준비 중!')">
-                <div class="text-3xl mb-1">🏙️</div>
-                <span id="label-gangnam" class="text-[11px] font-black text-slate-900">강남</span>
-                <p id="desc-gangnam" class="text-[9px] text-slate-400 font-bold mt-1 leading-tight text-center">강남·서초·관악·동작</p>
-            </div>
-
-            <!-- SE: Southeastern Zone -->
-            <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="alert('동남권 미션 준비 중!')">
-                <div class="text-3xl mb-1">🗼</div>
-                <span id="label-se" class="text-[11px] font-black text-slate-900">동남권</span>
-                <p id="desc-se" class="text-[9px] text-slate-400 font-bold mt-1 leading-tight text-center">송파·강동·광진·성동</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Info Card -->
-    <section class="px-5 mt-10 mb-10">
-        <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-3xl p-6 flex items-start gap-4 shadow-xl shadow-indigo-100">
-            <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
-            <div>
-                <h4 id="seoul-info-title" class="text-sm font-black text-white">서울 탐험 팁</h4>
-                <p id="seoul-info-desc" class="text-xs text-indigo-50 mt-2 leading-relaxed font-medium">
-                    전통적인 한국을 느끼고 싶다면 <span class="text-white font-black underline">도심권</span>을,<br>
-                    현대적인 도시의 밤을 즐기려면 <span class="text-white font-black underline">강남권</span>을 추천해요!
-                </p>
-            </div>
-        </div>
-    </section>
-</div>
-
-<script>
-    /**
-     * 서울 페이지 전용 다국어 텍스트 업데이트
-     */
-    (function() {
-        const langData = {
-            KO: {
-                guideMain: "어느 구역부터<br>탐험해 볼까요?",
-                guideSub: "미션을 수행할 서울의 구역을 선택하세요.",
-                nw: "서북권", nwDesc: "마포 · 은평 · 서대문",
-                central: "도심권", centralDesc: "종로 · 용산 · 중구",
-                ne: "동북권", neDesc: "동대문 · 노원 · 도봉 · 성북",
-                sw: "서남권", swDesc: "강서 · 영등포 · 구로 · 양천",
-                gangnam: "강남권", gangnamDesc: "강남 · 서초 · 관악 · 동작",
-                se: "동남권", seDesc: "송파 · 강동 · 광진 · 성동",
-                infoTitle: "서울 탐험 팁",
-                infoDesc: "전통적인 한국을 느끼고 싶다면 <span class='text-white font-black underline'>도심권</span>을, 현대적인 도시의 밤을 즐기려면 <span class='text-white font-black underline'>강남권</span>을 추천해요!"
-            },
-            EN: {
-                guideMain: "Which area should<br>we explore first?",
-                guideSub: "Select a district in Seoul to start your mission.",
-                nw: "Northwest", nwDesc: "Mapo · Eunpyeong · Seodaemun",
-                central: "Central", centralDesc: "Jongno · Yongsan · Jung-gu",
-                ne: "Northeast", neDesc: "Dongdaemun · Nowon · Dobong",
-                sw: "Southwest", swDesc: "Gangseo · Yeongdeppo · Guro",
-                gangnam: "Gangnam", gangnamDesc: "Gangnam · Seocho · Gwanak",
-                se: "Southeast", seDesc: "Songpa · Gangdong · Gwangjin",
-                infoTitle: "Seoul Exploration Tips",
-                infoDesc: "If you want to feel traditional Korea, visit <span class='text-white font-black underline'>Central Seoul</span>. For modern city nights, <span class='text-white font-black underline'>Gangnam</span> is highly recommended!"
-            },
-            JP: {
-                guideMain: "どの区域から<br>探検してみましょうか？",
-                guideSub: "ミッションを遂行するソウルの区域を選択してください。",
-                nw: "西北圏", nwDesc: "麻浦 · 恩平 · 西大門",
-                central: "都心圏", centralDesc: "鐘路 · 龍山 · 中区",
-                ne: "東北圏", neDesc: "東大門 · 蘆原 · 道峰 · 城北",
-                sw: "西南圏", swDesc: "江西 · 永登浦 · 九老 · 陽川",
-                gangnam: "江南圏", gangnamDesc: "江南 · 瑞草 · 冠岳 · 銅雀",
-                se: "東南圏", seDesc: "松坡 · 江東 · 広津 · 城東",
-                infoTitle: "ソウル探検のヒント",
-                infoDesc: "伝統的な韓国を感じたいなら <span class='text-white font-black underline'>都心圏</span>を、現代的な都市の夜を楽しむなら <span class='text-white font-black underline'>江南圏</span>をおすすめします！"
-            }
-        };
-
-        const currentLang = localStorage.getItem('selectedLang') || 'KO';
-        const data = langData[currentLang] || langData.KO;
-
-        // 텍스트 업데이트
-        const updates = {
-            'seoul-guide-main': data.guideMain,
-            'seoul-guide-sub': data.guideSub,
-            'label-nw': data.nw,
-            'desc-nw': data.nwDesc,
-            'label-central': data.central,
-            'desc-central': data.centralDesc,
-            'label-ne': data.ne,
-            'desc-ne': data.neDesc,
-            'label-sw': data.sw,
-            'desc-sw': data.swDesc,
-            'label-gangnam': data.gangnam,
-            'desc-gangnam': data.gangnamDesc,
-            'label-se': data.se,
-            'desc-se': data.seDesc,
-            'seoul-info-title': data.infoTitle,
-            'seoul-info-desc': data.infoDesc
-        };
-
-        for (const [id, value] of Object.entries(updates)) {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = value;
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .river-line {
+            height: 6px;
+            background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #60a5fa 100%);
+            border-radius: 999px;
+            position: relative;
+            overflow: hidden;
         }
-    })();
-</script>
+        .river-line::after {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: flow 3s infinite linear;
+        }
+        @keyframes flow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        .seoul-region-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #f1f5f9;
+            background: white;
+        }
+        .seoul-region-card:active {
+            transform: scale(0.96);
+            background-color: #f0f7ff;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans antialiased text-slate-900">
+
+    <!-- Main Content Container -->
+    <main class="max-w-md mx-auto min-h-screen bg-white shadow-sm flex flex-col">
+        
+        <div class="opacity-0 animate-fadeIn flex-grow">
+            <!-- Guide Section -->
+            <section class="px-6 py-10">
+                <h2 id="seoul-guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
+                    어느 구역부터<br>탐험해 볼까요?
+                </h2>
+                <p id="seoul-guide-sub" class="text-slate-500 mt-2 text-sm font-bold">미션을 수행할 서울의 구역을 선택하세요.</p>
+            </section>
+
+            <!-- Region Cards Grid (North of River) -->
+            <section class="px-4">
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <!-- NW: Northwestern Zone -->
+                    <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="handleCardClick('NW')">
+                        <div class="text-3xl mb-1">🎬</div>
+                        <span id="label-nw" class="text-[11px] font-black text-slate-900">서북권</span>
+                        <p id="desc-nw" class="text-[9px] text-slate-400 font-bold mt-1 leading-tight text-center">마포·은평·서대문</p>
+                    </div>
+
+                    <!-- Downtown: Central Seoul -->
+                    <div class="seoul-region-card rounded-2xl p-4 shadow-md border-2 border-indigo-500 flex flex-col items-center justify-center text-center cursor-pointer h-32 ring-4 ring-indigo-50" onclick="handleCardClick('Central')">
+                        <div class="text-3xl mb-1">⛰️</div>
+                        <span id="label-central" class="text-[11px] font-black text-indigo-900">도심권</span>
+                        <p id="desc-central" class="text-[9px] text-indigo-400 font-bold mt-1 leading-tight text-center">종로·중구·용산</p>
+                    </div>
+
+                    <!-- NE: Northeastern Zone -->
+                    <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="handleCardClick('NE')">
+                        <div class="text-3xl mb-1">✂️</div>
+                        <span id="label-ne" class="text-[11px] font-black text-slate-900">동북권</span>
+                        <p id="desc-ne" class="text-[8px] text-slate-400 font-bold mt-1 leading-tight text-center">동대문·노원·도봉·성북</p>
+                    </div>
+                </div>
+
+                <!-- Han River Divider -->
+                <div class="flex items-center gap-3 px-2 mb-6 text-blue-500 font-black italic text-[10px] tracking-widest uppercase">
+                    <div class="river-line flex-grow"></div>
+                    <span id="seoul-river-text">Han River</span>
+                    <div class="river-line flex-grow"></div>
+                </div>
+
+                <!-- Region Cards Grid (South of River) -->
+                <div class="grid grid-cols-3 gap-3">
+                    <!-- SW: Southwestern Zone -->
+                    <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="handleCardClick('SW')">
+                        <div class="text-3xl mb-1">👜</div>
+                        <span id="label-sw" class="text-[11px] font-black text-slate-900">서남권</span>
+                        <p id="desc-sw" class="text-[9px] text-slate-400 font-bold mt-1 leading-tight text-center">강서·영등포·구로·양천</p>
+                    </div>
+
+                    <!-- Gangnam: Gangnam Zone (Southeast-Center) -->
+                    <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="handleCardClick('Gangnam')">
+                        <div class="text-3xl mb-1">🏙️</div>
+                        <span id="label-gangnam" class="text-[11px] font-black text-slate-900">강남권</span>
+                        <p id="desc-gangnam" class="text-[9px] text-slate-400 font-bold mt-1 leading-tight text-center">강남·서초·관악·동작</p>
+                    </div>
+
+                    <!-- SE: Southeastern Zone -->
+                    <div class="seoul-region-card rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-32" onclick="handleCardClick('SE')">
+                        <div class="text-3xl mb-1">🗼</div>
+                        <span id="label-se" class="text-[11px] font-black text-slate-900">동남권</span>
+                        <p id="desc-se" class="text-[9px] text-slate-400 font-bold mt-1 leading-tight text-center">송파·강동·광진·성동</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Info Card -->
+            <section class="px-5 mt-12 mb-10">
+                <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-3xl p-6 flex items-start gap-4 shadow-xl shadow-indigo-100">
+                    <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
+                    <div>
+                        <h4 id="seoul-info-title" class="text-sm font-black text-white">서울 탐험 팁</h4>
+                        <p id="seoul-info-desc" class="text-xs text-indigo-50 mt-2 leading-relaxed font-medium">
+                            전통적인 한국을 느끼고 싶다면 <span class="text-white font-black underline">도심권</span>을,<br>
+                            현대적인 도시의 밤을 즐기려면 <span class="text-white font-black underline">강남권</span>을 추천해요!
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function handleCardClick(region) {
+            // 커스텀 모달이나 페이지 이동 로직을 여기에 구현할 수 있습니다.
+            console.log(region + " selected");
+        }
+
+        (function() {
+            const langData = {
+                KO: {
+                    guideMain: "어느 구역부터<br>탐험해 볼까요?",
+                    guideSub: "미션을 수행할 서울의 구역을 선택하세요.",
+                    nw: "서북권", nwDesc: "마포 · 은평 · 서대문",
+                    central: "도심권", centralDesc: "종로 · 용산 · 중구",
+                    ne: "동북권", neDesc: "동대문 · 노원 · 도봉 · 성북",
+                    sw: "서남권", swDesc: "강서 · 영등포 · 구로 · 양천",
+                    gangnam: "강남권", gangnamDesc: "강남 · 서초 · 관악 · 동작",
+                    se: "동남권", seDesc: "송파 · 강동 · 광진 · 성동",
+                    infoTitle: "서울 탐험 팁",
+                    infoDesc: "전통적인 한국을 느끼고 싶다면 <span class='text-white font-black underline'>도심권</span>을, 현대적인 도시의 밤을 즐기려면 <span class='text-white font-black underline'>강남권</span>을 추천해요!"
+                },
+                EN: {
+                    guideMain: "Which area should<br>we explore first?",
+                    guideSub: "Select a district in Seoul to start your mission.",
+                    nw: "Northwest", nwDesc: "Mapo · Eunpyeong · Seodaemun",
+                    central: "Central", centralDesc: "Jongno · Yongsan · Jung-gu",
+                    ne: "Northeast", neDesc: "Dongdaemun · Nowon · Dobong",
+                    sw: "Southwest", swDesc: "Gangseo · Yeongdeppo · Guro",
+                    gangnam: "Gangnam", gangnamDesc: "Gangnam · Seocho · Gwanak",
+                    se: "Southeast", seDesc: "Songpa · Gangdong · Gwangjin",
+                    infoTitle: "Seoul Exploration Tips",
+                    infoDesc: "If you want to feel traditional Korea, visit <span class='text-white font-black underline'>Central Seoul</span>. For modern city nights, <span class='text-white font-black underline'>Gangnam</span> is highly recommended!"
+                },
+                JP: {
+                    guideMain: "どの区域から<br>探検してみましょうか？",
+                    guideSub: "ミッションを遂行するソウルの区域を選択してください。",
+                    nw: "西北圏", nwDesc: "麻浦 · 恩平 · 西大門",
+                    central: "都심圏", centralDesc: "鐘路 · 龍山 · 中区",
+                    ne: "東北圏", neDesc: "東大門 · 蘆原 · 道峰 · 城北",
+                    sw: "西南圏", swDesc: "江西 · 永登浦 · 九老 · 陽川",
+                    gangnam: "江南圏", gangnamDesc: "江南 · 瑞草 · 冠岳 · 銅雀",
+                    se: "東南圏", seDesc: "松坡 · 江東 · 広津 · 城東",
+                    infoTitle: "ソウル探検のヒント",
+                    infoDesc: "伝統的な韓国を感じたいなら <span class='text-white font-black underline'>都心圏</span>を、現代的な都市の夜を楽しむなら <span class='text-white font-black underline'>江南圏</span>をおすすめします！"
+                }
+            };
+
+            const currentLang = localStorage.getItem('selectedLang') || 'KO';
+            const data = langData[currentLang] || langData.KO;
+
+            const updates = {
+                'seoul-guide-main': data.guideMain,
+                'seoul-guide-sub': data.guideSub,
+                'label-nw': data.nw,
+                'desc-nw': data.nwDesc,
+                'label-central': data.central,
+                'desc-central': data.centralDesc,
+                'label-ne': data.ne,
+                'desc-ne': data.neDesc,
+                'label-sw': data.sw,
+                'desc-sw': data.swDesc,
+                'label-gangnam': data.gangnam,
+                'desc-gangnam': data.gangnamDesc,
+                'label-se': data.se,
+                'desc-se': data.seDesc,
+                'seoul-info-title': data.infoTitle,
+                'seoul-info-desc': data.infoDesc
+            };
+
+            for (const [id, value] of Object.entries(updates)) {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = value;
+            }
+        })();
+    </script>
+</body>
+</html>
