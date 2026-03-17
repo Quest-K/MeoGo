@@ -26,28 +26,28 @@ background-color: #f0fbff;
 <!-- Region Cards Grid -->
 <section class="px-4 grid grid-cols-2 gap-4">
     <!-- 북부 -->
-    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]" onclick="alert('북부 지역 준비중')">
+    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]" onclick="alert('Coming soon!')">
         <div class="text-3xl mb-2">🎡</div>
         <span id="label-north" class="text-sm font-black text-slate-900">북부</span>
         <p id="desc-north" class="text-[10px] text-slate-400 font-bold mt-1">고양 · 파주 · 의정부</p>
     </div>
 
     <!-- 남부 -->
-    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]" onclick="alert('남부 지역 준비중')">
+    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]" onclick="alert('Coming soon!')">
         <div class="text-3xl mb-2">🏰</div>
         <span id="label-south" class="text-sm font-black text-slate-900">남부</span>
         <p id="desc-south" class="text-[10px] text-slate-400 font-bold mt-1">수원 · 용인 · 화성</p>
     </div>
 
     <!-- 서부 -->
-    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]" onclick="alert('서부 지역 준비중')">
+    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]" onclick="alert('Coming soon!')">
         <div class="text-3xl mb-2">🌊</div>
         <span id="label-west" class="text-sm font-black text-slate-900">서부</span>
         <p id="desc-west" class="text-[10px] text-slate-400 font-bold mt-1">안산 · 안양 · 시흥</p>
     </div>
 
     <!-- 동부 -->
-    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]" onclick="alert('동부 지역 준비중')">
+    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]" onclick="alert('Coming soon!')">
         <div class="text-3xl mb-2">🖼️</div>
         <span id="label-east" class="text-sm font-black text-slate-900">동부</span>
         <p id="desc-east" class="text-[10px] text-slate-400 font-bold mt-1">가평 · 양평</p>
@@ -73,7 +73,6 @@ background-color: #f0fbff;
 
 <script>
 (function() {
-const lang = localStorage.getItem('selectedLang') || 'KO';
 const i18n = {
 KO: {
 guideMain: "경기도의 숨겨진
@@ -108,33 +107,61 @@ guideMain: "京畿道の隠れた
 
 
 
-魅力を探してみましょう！",
+魅력을 찾아보세요！",
 guideSub: "探検したい区域を選択してください。",
 north: "北部", northDesc: "高陽 · 坡州 · 議政府",
 south: "南部", southDesc: "水原 · 龍仁 · 華城",
 west: "西部", westDesc: "安山 · 安養 · 始興",
 east: "東部", eastDesc: "加平 · 楊平",
 infoTitle: "京畿道おすすめコース",
-infoDesc: "家族旅行なら <span class='font-black underline'>水原華城</span>や <span class='font-black underline'>龍仁エバーランド</span>를, 自然の中の癒やしは <span class='font-black underline'>加平/楊平</span>コースをおすすめします！"
+infoDesc: "家族旅行なら <span class='font-black underline'>水原華城</span>や <span class='font-black underline'>龍仁エ버랜드</span>を, 自然の中の癒やしは <span class='font-black underline'>加平/楊平</span>コースをおすすめします！"
 }
 };
 
+function applyLanguage() {
+    const lang = localStorage.getItem(&#39;selectedLang&#39;) || &#39;KO&#39;;
     const data = i18n[lang];
     if (data) {
-        document.getElementById(&#39;guide-main&#39;).innerHTML = data.guideMain;
-        document.getElementById(&#39;guide-sub&#39;).innerText = data.guideSub;
-        document.getElementById(&#39;label-north&#39;).innerText = data.north;
-        document.getElementById(&#39;desc-north&#39;).innerText = data.northDesc;
-        document.getElementById(&#39;label-south&#39;).innerText = data.south;
-        document.getElementById(&#39;desc-south&#39;).innerText = data.southDesc;
-        document.getElementById(&#39;label-west&#39;).innerText = data.west;
-        document.getElementById(&#39;desc-west&#39;).innerText = data.westDesc;
-        document.getElementById(&#39;label-east&#39;).innerText = data.east;
-        document.getElementById(&#39;desc-east&#39;).innerText = data.eastDesc;
-        document.getElementById(&#39;info-title&#39;).innerText = data.infoTitle;
-        document.getElementById(&#39;info-desc&#39;).innerHTML = data.infoDesc;
+        const elGuideMain = document.getElementById(&#39;guide-main&#39;);
+        const elGuideSub = document.getElementById(&#39;guide-sub&#39;);
+        const elLabelNorth = document.getElementById(&#39;label-north&#39;);
+        const elDescNorth = document.getElementById(&#39;desc-north&#39;);
+        const elLabelSouth = document.getElementById(&#39;label-south&#39;);
+        const elDescSouth = document.getElementById(&#39;desc-south&#39;);
+        const elLabelWest = document.getElementById(&#39;label-west&#39;);
+        const elDescWest = document.getElementById(&#39;desc-west&#39;);
+        const elLabelEast = document.getElementById(&#39;label-east&#39;);
+        const elDescEast = document.getElementById(&#39;desc-east&#39;);
+        const elInfoTitle = document.getElementById(&#39;info-title&#39;);
+        const elInfoDesc = document.getElementById(&#39;info-desc&#39;);
+
+        if(elGuideMain) elGuideMain.innerHTML = data.guideMain;
+        if(elGuideSub) elGuideSub.innerText = data.guideSub;
+        if(elLabelNorth) elLabelNorth.innerText = data.north;
+        if(elDescNorth) elDescNorth.innerText = data.northDesc;
+        if(elLabelSouth) elLabelSouth.innerText = data.south;
+        if(elDescSouth) elDescSouth.innerText = data.southDesc;
+        if(elLabelWest) elLabelWest.innerText = data.west;
+        if(elDescWest) elDescWest.innerText = data.westDesc;
+        if(elLabelEast) elLabelEast.innerText = data.east;
+        if(elDescEast) elDescEast.innerText = data.eastDesc;
+        if(elInfoTitle) elInfoTitle.innerText = data.infoTitle;
+        if(elInfoDesc) elInfoDesc.innerHTML = data.infoDesc;
     }
+}
+
+// 초기 실행
+applyLanguage();
+
+// index.html에서 언어 변경 시 이벤트를 감지하기 위한 interval (또는 커스텀 이벤트)
+// 여기서는 간단하게 0.5초마다 localStorage를 확인하거나, 
+// 부모창의 언어변경 버튼에 이 applyLanguage를 연결하는 방식이 권장됩니다.
+window.addEventListener(&#39;storage&#39;, (e) =&gt; {
+    if (e.key === &#39;selectedLang&#39;) {
+        applyLanguage();
+    }
+});
+
+
 })();
-
-
 </script>
