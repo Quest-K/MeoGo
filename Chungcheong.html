@@ -1,115 +1,103 @@
-<div class="animate-in slide-in-from-bottom-4">
-<!-- Guide Section -->
-<section class="px-6 py-8">
-<h2 id="guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
-여유와 낭만이 있는
+<style>
+    .chungcheong-region-card {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #f1f5f9;
+        background: white;
+    }
+    .chungcheong-region-card:active {
+        transform: scale(0.96);
+        background-color: #f5f3ff; /* 충청도의 여유로운 보랏빛/연보라 톤 */
+    }
+</style>
 
+<div class="opacity-0 animate-[fadeIn_0.5s_ease-in_forwards]">
+    <section class="px-6 py-8">
+        <h2 id="chungcheong-guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
+            여유와 낭만이 있는<br>충청도로 오세요!
+        </h2>
+        <p id="chungcheong-guide-sub" class="text-slate-500 mt-2 text-sm font-bold">탐험하고 싶은 지역을 선택해 주세요.</p>
+    </section>
 
-
-충청도로 오세요!
-</h2>
-<p id="guide-sub" class="text-slate-500 mt-2 text-sm font-bold">탐험하고 싶은 지역을 선택해 주세요.</p>
-</section>
-
-<!-- Region Cards Grid -->
-<section class="px-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px]" onclick="alert('충북 퀘스트 준비 중')">
-        <div class="text-4xl mb-3">🌳</div>
-        <span id="label-cb" class="text-sm font-black text-slate-900">충청북도</span>
-        <p id="desc-cb" class="text-xs text-slate-400 font-bold mt-1">청주 · 단양 · 제천</p>
-    </div>
-
-    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px]" onclick="alert('충남 퀘스트 준비 중')">
-        <div class="text-4xl mb-3">🏖️</div>
-        <span id="label-cn" class="text-sm font-black text-slate-900">충청남도</span>
-        <p id="desc-cn" class="text-xs text-slate-400 font-bold mt-1">천안 · 태안 · 보령</p>
-    </div>
-
-    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px] sm:col-span-2" onclick="alert('대전/세종 퀘스트 준비 중')">
-        <div class="text-4xl mb-3">🔬</div>
-        <span id="label-ds" class="text-sm font-black text-slate-900">대전 / 세종</span>
-        <p id="desc-ds" class="text-xs text-slate-400 font-bold mt-1">과학의 도시 & 행정수도</p>
-    </div>
-</section>
-
-<!-- Info Card -->
-<section class="px-5 my-10">
-    <div class="bg-indigo-600 rounded-3xl p-6 flex items-start gap-4 shadow-xl shadow-indigo-100">
-        <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
-        <div>
-            <h4 id="info-title" class="text-sm font-black text-white">추천 테마</h4>
-            <p id="info-desc" class="text-xs text-indigo-50 mt-2 leading-relaxed font-medium">
-                자연의 힐링을 원하신다면 <span class='font-black underline'>단양/태안</span>을, <br>
-                도시의 스마트함을 원하신다면 <span class='font-black underline'>대전/세종</span>을 선택해 보세요!
-            </p>
+    <section class="px-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="chungcheong-region-card rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px]" onclick="alert('충북 퀘스트 준비 중!')">
+            <div class="text-4xl mb-3">🌳</div>
+            <span id="chungcheong-label-cb" class="text-sm font-black text-slate-900">충청북도</span>
+            <p id="chungcheong-desc-cb" class="text-xs text-slate-400 font-bold mt-1">청주 · 단양 · 제천</p>
         </div>
-    </div>
-</section>
 
+        <div class="chungcheong-region-card rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px]" onclick="alert('충남 퀘스트 준비 중!')">
+            <div class="text-4xl mb-3">🏖️</div>
+            <span id="chungcheong-label-cn" class="text-sm font-black text-slate-900">충청남도</span>
+            <p id="chungcheong-desc-cn" class="text-xs text-slate-400 font-bold mt-1">천안 · 태안 · 보령</p>
+        </div>
 
+        <div class="chungcheong-region-card rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px] sm:col-span-2" onclick="alert('대전/세종 퀘스트 준비 중!')">
+            <div class="text-4xl mb-3">🔬</div>
+            <span id="chungcheong-label-ds" class="text-sm font-black text-slate-900">대전 / 세종</span>
+            <p id="chungcheong-desc-ds" class="text-xs text-slate-400 font-bold mt-1">과학의 도시 & 행정수도</p>
+        </div>
+    </section>
+
+    <section class="px-5 mt-10 mb-10">
+        <div class="bg-indigo-600 rounded-3xl p-6 flex items-start gap-4 shadow-xl">
+            <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
+            <div>
+                <h4 id="chungcheong-info-title" class="text-sm font-black text-white">추천 테마</h4>
+                <p id="chungcheong-info-desc" class="text-xs text-indigo-50 mt-2 leading-relaxed font-medium">
+                    자연의 힐링을 원하신다면 <span class='font-black underline text-white text-white'>단양/태안</span>을, <br>
+                    도시의 스마트함을 원하신다면 <span class='font-black underline text-white text-white'>대전/세종</span>을 선택해 보세요!
+                </p>
+            </div>
+        </div>
+    </section>
 </div>
 
 <script>
-/**
-* index.html에 이미 정의된 i18n 로직이 있을 경우 이를 활용하도록 구성하거나,
-* 파일 로드 시점에 언어팩을 적용하는 간단한 함수입니다.
-*/
 (function() {
-const lang = localStorage.getItem('selectedLang') || 'KO';
-const data = {
-KO: {
-guideMain: "여유와 낭만이 있는
+    const i18n = {
+        KO: {
+            guideMain: "여유와 낭만이 있는<br>충청도로 오세요!",
+            guideSub: "탐험하고 싶은 지역을 선택해 주세요.",
+            cb: "충청북도", cbDesc: "청주 · 단양 · 제천",
+            cn: "충청남도", cnDesc: "천안 · 태안 · 보령",
+            ds: "대전 / 세종", dsDesc: "과학의 도시 & 행정수도",
+            infoTitle: "추천 테마",
+            infoDesc: "자연의 힐링을 원하신다면 <span class='font-black underline text-white'>단양/태안</span>을, 도시의 스마트함을 원하신다면 <span class='font-black underline text-white'>대전/세종</span>을 선택해 보세요!"
+        },
+        EN: {
+            guideMain: "Find relaxation and<br>romance in Chungcheong!",
+            guideSub: "Please select the area you want to explore.",
+            cb: "Chungcheongbuk-do", cbDesc: "Cheongju, Danyang",
+            cn: "Chungcheongnam-do", cnDesc: "Cheonan, Taean",
+            ds: "Daejeon / Sejong", dsDesc: "Science & Administration",
+            infoTitle: "Recommended",
+            infoDesc: "Choose <span class='font-black underline text-white'>Danyang/Taean</span> for healing nature, or <span class='font-black underline text-white'>Daejeon/Sejong</span> for smart cities!"
+        }
+    };
 
+    function applyLanguage() {
+        const lang = localStorage.getItem('selectedLang') || 'KO';
+        const data = i18n[lang] || i18n.KO;
+        
+        const updates = {
+            'chungcheong-guide-main': data.guideMain,
+            'chungcheong-guide-sub': data.guideSub,
+            'chungcheong-label-cb': data.cb,
+            'chungcheong-desc-cb': data.cbDesc,
+            'chungcheong-label-cn': data.cn,
+            'chungcheong-desc-cn': data.cnDesc,
+            'chungcheong-label-ds': data.ds,
+            'chungcheong-desc-ds': data.dsDesc,
+            'chungcheong-info-title': data.infoTitle,
+            'chungcheong-info-desc': data.infoDesc
+        };
 
+        for (const [id, value] of Object.entries(updates)) {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = value;
+        }
+    }
 
-충청도로 오세요!",
-guideSub: "탐험하고 싶은 지역을 선택해 주세요.",
-cb: "충청북도", cbDesc: "청주 · 단양 · 제천",
-cn: "충청남도", cnDesc: "천안 · 태안 · 보령",
-ds: "대전 / 세종", dsDesc: "과학의 도시 & 행정수도",
-infoTitle: "추천 테마",
-infoDesc: "자연의 힐링을 원하신다면 <span class='font-black underline'>단양/태안</span>을, 도시의 스마트함을 원하신다면 <span class='font-black underline'>대전/세종</span>을 선택해 보세요!"
-},
-EN: {
-guideMain: "Find relaxation and
-
-
-
-romance in Chungcheong!",
-guideSub: "Please select the area you want to explore.",
-cb: "Chungcheongbuk-do", cbDesc: "Cheongju, Danyang",
-cn: "Chungcheongnam-do", cnDesc: "Cheonan, Taean",
-ds: "Daejeon / Sejong", dsDesc: "Science & Administration",
-infoTitle: "Recommended",
-infoDesc: "Choose <span class='font-black underline'>Danyang/Taean</span> for healing nature, or <span class='font-black underline'>Daejeon/Sejong</span> for smart cities!"
-},
-JP: {
-guideMain: "余裕とロマンがある
-
-
-
-忠清道へお越しください！",
-guideSub: "探検したい区域を選択してください。",
-cb: "忠清北道", cbDesc: "清州 · 丹陽 · 堤川",
-cn: "忠清南道", cnDesc: "天安 · 泰安 · 保寧",
-ds: "大田 / 世宗", dsDesc: "科学の都市 & 行政首都",
-infoTitle: "おすすめ",
-infoDesc: "自然の癒やしなら <span class='font-black underline'>丹陽/泰安</span>을, 都市のスマートさなら <span class='font-black underline'>大田/世宗</span>を選択してください！"
-}
-};
-
-    const res = data[lang];
-    document.getElementById(&#39;guide-main&#39;).innerHTML = res.guideMain;
-    document.getElementById(&#39;guide-sub&#39;).innerText = res.guideSub;
-    document.getElementById(&#39;label-cb&#39;).innerText = res.cb;
-    document.getElementById(&#39;desc-cb&#39;).innerText = res.cbDesc;
-    document.getElementById(&#39;label-cn&#39;).innerText = res.cn;
-    document.getElementById(&#39;desc-cn&#39;).innerText = res.cnDesc;
-    document.getElementById(&#39;label-ds&#39;).innerText = res.ds;
-    document.getElementById(&#39;desc-ds&#39;).innerText = res.dsDesc;
-    document.getElementById(&#39;info-title&#39;).innerText = res.infoTitle;
-    document.getElementById(&#39;info-desc&#39;).innerHTML = res.infoDesc;
+    applyLanguage();
 })();
-
-
 </script>
