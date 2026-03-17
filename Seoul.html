@@ -1,343 +1,192 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K-Quest - Select Seoul Region</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-            background-color: #f8fafc;
-            -webkit-tap-highlight-color: transparent;
-        }
+<style>
+/* 한강 애니메이션 - 해당 페이지 전용 스타일 */
+.river-line {
+height: 10px;
+background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #60a5fa 100%);
+border-radius: 999px;
+position: relative;
+overflow: hidden;
+}
+.river-line::after {
+content: "";
+position: absolute;
+top: 0; left: -100%;
+width: 100%; height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+animation: flow 3s infinite linear;
+}
+@keyframes flow {
+0% { left: -100%; }
+100% { left: 100%; }
+}
+.region-card {
+transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+border: 1px solid #f1f5f9;
+}
+.region-card:active {
+transform: scale(0.96);
+background-color: #f0f7ff;
+}
+</style>
 
-        /* Fixed Header Style */
-        header {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
+<div class="animate-in slide-in-from-bottom-4">
+<!-- Guide Section -->
+<section class="px-6 py-8">
+<h2 id="guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
+어느 지역의 미션을
 
-        .gradient-text {
-            background: linear-gradient(to right, #4f46e5, #9333ea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
 
-        /* Language Dropdown Styles */
-        .lang-container { position: relative; display: inline-block; }
-        .lang-btn {
-            background: #f1f5f9;
-            padding: 0.4rem 0.8rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #475569;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            border: 1px solid #e2e8f0;
-        }
-        .lang-dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: calc(100% + 8px);
-            background: white;
-            min-width: 140px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            border-radius: 16px;
-            overflow: hidden;
-            z-index: 100;
-            border: 1px solid #f1f5f9;
-        }
-        .lang-dropdown.show { display: block; }
-        .lang-option {
-            padding: 0.8rem 1rem;
-            font-size: 0.875rem;
-            color: #475569;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .lang-option:hover { background: #f8fafc; }
-        .lang-option.active {
-            color: #4f46e5;
-            font-weight: bold;
-            background: #eef2ff;
-        }
 
-        /* Region Cards */
-        .region-card {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid #f1f5f9;
-        }
-        .region-card:active {
-            transform: scale(0.96);
-            background-color: #f0f7ff;
-        }
+시작해볼까요?
+</h2>
+<p id="guide-sub" class="text-slate-500 mt-2 text-sm font-bold">탐험하고 싶은 구역을 선택해 주세요.</p>
+</section>
 
-        /* Han River Animation */
-        .river-line {
-            height: 10px;
-            background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 50%, #60a5fa 100%);
-            border-radius: 999px;
-            position: relative;
-            overflow: hidden;
-        }
-        .river-line::after {
-            content: "";
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: flow 3s infinite linear;
-        }
-        @keyframes flow {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
+<!-- Grid Layout with Han River -->
+<section class="px-4 flex-grow relative">
+    <!-- Upper Areas (North) -->
+    <div class="grid grid-cols-3 gap-3 mb-6">
+        <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36" onclick="alert('서북권 준비중')">
+            <div class="text-3xl mb-2">🎬</div>
+            <span id="label-nw" class="text-xs font-black text-slate-900">서북권</span>
+            <p id="desc-nw" class="text-[10px] text-slate-400 font-bold mt-1">마포·서대문·은평</p>
+        </div>
 
-        .pb-safe {
-            padding-bottom: calc(6rem + env(safe-area-inset-bottom));
-        }
-    </style>
-</head>
-<body class="text-slate-900">
+        <div class="region-card bg-white rounded-2xl p-4 shadow-md border-2 border-indigo-500 flex flex-col items-center justify-center text-center cursor-pointer h-36 ring-4 ring-indigo-50" onclick="alert('강북 준비중')">
+            <div class="text-3xl mb-2">⛰️</div>
+            <span id="label-gb" class="text-xs font-black text-indigo-900">강북</span>
+            <p id="desc-gb" class="text-[10px] text-indigo-400 font-bold mt-1">종로·중구·용산</p>
+        </div>
 
-    <div class="max-w-2xl mx-auto min-h-screen flex flex-col pb-safe">
-        
-        <!-- [고정 상단바] index.html과 동일한 구조 -->
-        <header class="bg-white/90 backdrop-blur-md px-5 py-3 flex justify-between items-center sticky top-0 z-[100] border-b border-slate-100">
-            <div class="flex items-center gap-2">
-                <!-- 뒤로가기 버튼 -->
-                <button onclick="history.back()" class="p-1.5 -ml-1 rounded-full hover:bg-slate-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <h1 id="header-title" class="text-lg font-bold text-slate-900">서울 지역 선택</h1>
-            </div>
-            
-            <div class="flex items-center gap-2">
-                <!-- 언어 선택 드롭다운 (index와 동일) -->
-                <div class="lang-container">
-                    <button class="lang-btn shadow-sm" onclick="toggleLangDropdown(event)">
-                        <span class="text-blue-500">🌐</span>
-                        <span id="currentLangDisplay">KO</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                    <div id="langDropdown" class="lang-dropdown">
-                        <div class="lang-option" data-lang="KO" onclick="changeLanguage('KO')"><span>🇰🇷</span> 한국어</div>
-                        <div class="lang-option" data-lang="EN" onclick="changeLanguage('EN')"><span>🇺🇸</span> English</div>
-                        <div class="lang-option" data-lang="JP" onclick="changeLanguage('JP')"><span>🇯🇵</span> 日本語</div>
-                    </div>
-                </div>
-                <!-- 알림/프로필 (구조 유지) -->
-                <button class="p-2 text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg></button>
-            </div>
-        </header>
-
-        <!-- Guide Section -->
-        <section class="px-6 py-8">
-            <h2 id="guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
-                어느 지역의 미션을<br>시작해볼까요?
-            </h2>
-            <p id="guide-sub" class="text-slate-500 mt-2 text-sm font-bold">탐험하고 싶은 구역을 선택해 주세요.</p>
-        </section>
-
-        <!-- Grid Layout with Han River -->
-        <section class="px-4 flex-grow relative">
-            <!-- Upper Areas (North) -->
-            <div class="grid grid-cols-3 gap-3 mb-6">
-                <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36">
-                    <div class="text-3xl mb-2">🎬</div>
-                    <span id="label-nw" class="text-xs font-black text-slate-900">서북권</span>
-                    <p id="desc-nw" class="text-[10px] text-slate-400 font-bold mt-1">마포·서대문·은평</p>
-                </div>
-
-                <div class="region-card bg-white rounded-2xl p-4 shadow-md border-2 border-indigo-500 flex flex-col items-center justify-center text-center cursor-pointer h-36 ring-4 ring-indigo-50">
-                    <div class="text-3xl mb-2">⛰️</div>
-                    <span id="label-gb" class="text-xs font-black text-indigo-900">강북</span>
-                    <p id="desc-gb" class="text-[10px] text-indigo-400 font-bold mt-1">종로·중구·용산</p>
-                </div>
-
-                <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36">
-                    <div class="text-3xl mb-2">✂️</div>
-                    <span id="label-ne" class="text-xs font-black text-slate-900">동북권</span>
-                    <p id="desc-ne" class="text-[10px] text-slate-400 font-bold mt-1">성북·동대문·노원</p>
-                </div>
-            </div>
-
-            <!-- Han River Divider -->
-            <div class="flex items-center gap-3 px-2 mb-6 text-blue-500 font-black italic text-[10px] tracking-widest uppercase">
-                <div class="river-line flex-grow"></div>
-                <span id="river-text">Han River</span>
-                <div class="river-line flex-grow"></div>
-            </div>
-
-            <!-- Lower Areas (South) -->
-            <div class="grid grid-cols-3 gap-3">
-                <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36">
-                    <div class="text-3xl mb-2">👜</div>
-                    <span id="label-sw" class="text-xs font-black text-slate-900">서남권</span>
-                    <p id="desc-sw" class="text-[10px] text-slate-400 font-bold mt-1">강서·영등포·구로</p>
-                </div>
-
-                <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36">
-                    <div class="text-3xl mb-2">🏙️</div>
-                    <span id="label-gn" class="text-xs font-black text-slate-900">강남</span>
-                    <p id="desc-gn" class="text-[10px] text-slate-400 font-bold mt-1">강남·서초·관악</p>
-                </div>
-
-                <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36">
-                    <div class="text-3xl mb-2">🗼</div>
-                    <span id="label-se" class="text-xs font-black text-slate-900">동남권</span>
-                    <p id="desc-se" class="text-[10px] text-slate-400 font-bold mt-1">성동·광진·송파</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Info Card -->
-        <section class="px-5 my-8">
-            <div class="bg-indigo-600 rounded-3xl p-6 flex items-start gap-4 shadow-xl shadow-indigo-100">
-                <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
-                <div>
-                    <h4 id="info-title" class="text-sm font-black text-white">추천 테마</h4>
-                    <p id="info-desc" class="text-xs text-indigo-50 mt-2 leading-relaxed font-medium">
-                        역사와 자연을 원하신다면 강북을, <br>
-                        트렌디한 쇼핑을 원하신다면 강남 지역을 선택해 보세요!
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Bottom Navigation -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/80 backdrop-blur-2xl border-t border-slate-100 px-10 py-4 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.04)]">
-            <button onclick="location.href='index.html'" class="flex flex-col items-center gap-1 text-indigo-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                <span id="nav-home" class="text-[10px] font-bold">홈</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 text-slate-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                <span id="nav-mission" class="text-[10px] font-bold">미션</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 text-slate-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-                <span id="nav-rank" class="text-[10px] font-bold">랭킹</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 text-slate-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                <span id="nav-record" class="text-[10px] font-bold">기록</span>
-            </button>
-        </nav>
+        <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36" onclick="alert('동북권 준비중')">
+            <div class="text-3xl mb-2">✂️</div>
+            <span id="label-ne" class="text-xs font-black text-slate-900">동북권</span>
+            <p id="desc-ne" class="text-[10px] text-slate-400 font-bold mt-1">성북·동대문·노원</p>
+        </div>
     </div>
 
-    <script>
-        const i18n = {
-            KO: {
-                title: "서울 지역 선택",
-                guideMain: "어느 지역의 미션을<br>시작해볼까요?",
-                guideSub: "탐험하고 싶은 구역을 선택해 주세요.",
-                river: "한강",
-                nw: "서북권", nwDesc: "마포·서대문·은평",
-                gb: "강북", gbDesc: "종로·중구·용산",
-                ne: "동북권", neDesc: "성북·동대문·노원",
-                sw: "서남권", swDesc: "강서·영등포·구로",
-                gn: "강남", gnDesc: "강남·서초·관악",
-                se: "동남권", seDesc: "성동·광진·송파",
-                infoTitle: "추천 테마",
-                infoDesc: "역사와 자연을 원하신다면 <span class='font-black underline'>강북</span>을, 트렌디한 쇼핑을 원하신다면 <span class='font-black underline'>강남</span>을 선택해 보세요!",
-                home: "홈", mission: "미션", rank: "랭킹", record: "기록"
-            },
-            EN: {
-                title: "Select Region",
-                guideMain: "Which area's mission<br>shall we start?",
-                guideSub: "Please select the area you want to explore.",
-                river: "Han River",
-                nw: "Northwest", nwDesc: "Mapo, Seodaemun",
-                gb: "Gangbuk", gbDesc: "Jongno, Jung-gu",
-                ne: "Northeast", neDesc: "Seongbuk, Nowon",
-                sw: "Southwest", swDesc: "Gangseo, Guro",
-                gn: "Gangnam", gnDesc: "Gangnam, Seocho",
-                se: "Southeast", seDesc: "Seongdong, Songpa",
-                infoTitle: "Recommended",
-                infoDesc: "Choose <span class='font-black underline'>Gangbuk</span> for history, or <span class='font-black underline'>Gangnam</span> for trendy shopping!",
-                home: "Home", mission: "Mission", rank: "Ranking", record: "Record"
-            },
-            JP: {
-                title: "ソウル地域選択",
-                guideMain: "どの地域のミッションを<br>始めましょうか？",
-                guideSub: "探検したい区域を選択してください。",
-                river: "漢江",
-                nw: "西北圏", nwDesc: "麻浦・西大門",
-                gb: "江北", gbDesc: "鍾路・中区",
-                ne: "東北圏", neDesc: "城北・蘆原",
-                sw: "西南圏", swDesc: "江西・九老",
-                gn: "江南", gnDesc: "江南・瑞草",
-                se: "東南圏", seDesc: "城東・松坡",
-                infoTitle: "おすすめ",
-                infoDesc: "<span class='font-black underline'>江北</span>で歴史を、<span class='font-black underline'>江南</span>でトレンドを楽しんでください！",
-                home: "ホーム", mission: "ミッション", rank: "ランキング", record: "記録"
-            }
-        };
+    <!-- Han River Divider -->
+    <div class="flex items-center gap-3 px-2 mb-6 text-blue-500 font-black italic text-[10px] tracking-widest uppercase">
+        <div class="river-line flex-grow"></div>
+        <span id="river-text">Han River</span>
+        <div class="river-line flex-grow"></div>
+    </div>
 
-        function toggleLangDropdown(e) {
-            e.stopPropagation();
-            document.getElementById('langDropdown').classList.toggle('show');
-        }
+    <!-- Lower Areas (South) -->
+    <div class="grid grid-cols-3 gap-3">
+        <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36" onclick="alert('서남권 준비중')">
+            <div class="text-3xl mb-2">👜</div>
+            <span id="label-sw" class="text-xs font-black text-slate-900">서남권</span>
+            <p id="desc-sw" class="text-[10px] text-slate-400 font-bold mt-1">강서·영등포·구로</p>
+        </div>
 
-        function changeLanguage(lang) {
-            document.getElementById('currentLangDisplay').innerText = lang;
-            const data = i18n[lang];
-            
-            // Update All Texts
-            document.getElementById('header-title').innerText = data.title;
-            document.getElementById('guide-main').innerHTML = data.guideMain;
-            document.getElementById('guide-sub').innerText = data.guideSub;
-            document.getElementById('river-text').innerText = data.river;
-            document.getElementById('label-nw').innerText = data.nw;
-            document.getElementById('desc-nw').innerText = data.nwDesc;
-            document.getElementById('label-gb').innerText = data.gb;
-            document.getElementById('desc-gb').innerText = data.gbDesc;
-            document.getElementById('label-ne').innerText = data.ne;
-            document.getElementById('desc-ne').innerText = data.neDesc;
-            document.getElementById('label-sw').innerText = data.sw;
-            document.getElementById('desc-sw').innerText = data.swDesc;
-            document.getElementById('label-gn').innerText = data.gn;
-            document.getElementById('desc-gn').innerText = data.gnDesc;
-            document.getElementById('label-se').innerText = data.se;
-            document.getElementById('desc-se').innerText = data.seDesc;
-            document.getElementById('info-title').innerText = data.infoTitle;
-            document.getElementById('info-desc').innerHTML = data.infoDesc;
-            document.getElementById('nav-home').innerText = data.home;
-            document.getElementById('nav-mission').innerText = data.mission;
-            document.getElementById('nav-rank').innerText = data.rank;
-            document.getElementById('nav-record').innerText = data.record;
+        <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36" onclick="alert('강남 준비중')">
+            <div class="text-3xl mb-2">🏙️</div>
+            <span id="label-gn" class="text-xs font-black text-slate-900">강남</span>
+            <p id="desc-gn" class="text-[10px] text-slate-400 font-bold mt-1">강남·서초·관악</p>
+        </div>
 
-            // UI State
-            document.querySelectorAll('.lang-option').forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.lang === lang);
-            });
-            document.getElementById('langDropdown').classList.remove('show');
-            
-            // Save to LocalStorage for Sync
-            localStorage.setItem('selectedLang', lang);
-        }
+        <div class="region-card bg-white rounded-2xl p-4 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer h-36" onclick="alert('동남권 준비중')">
+            <div class="text-3xl mb-2">🗼</div>
+            <span id="label-se" class="text-xs font-black text-slate-900">동남권</span>
+            <p id="desc-se" class="text-[10px] text-slate-400 font-bold mt-1">성동·광진·송파</p>
+        </div>
+    </div>
+</section>
 
-        // Close dropdown when clicking outside
-        window.onclick = function() {
-            document.getElementById('langDropdown').classList.remove('show');
-        };
+<!-- Info Card -->
+<section class="px-5 my-8">
+    <div class="bg-indigo-600 rounded-3xl p-6 flex items-start gap-4 shadow-xl shadow-indigo-100">
+        <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
+        <div>
+            <h4 id="info-title" class="text-sm font-black text-white">추천 테마</h4>
+            <p id="info-desc" class="text-xs text-indigo-50 mt-2 leading-relaxed font-medium">
+                역사와 자연을 원하신다면 강북을, <br>
+                트렌디한 쇼핑을 원하신다면 강남 지역을 선택해 보세요!
+            </p>
+        </div>
+    </div>
+</section>
 
-        // Sync Language on Load
-        window.onload = function() {
-            const savedLang = localStorage.getItem('selectedLang') || 'KO';
-            changeLanguage(savedLang);
-        };
-    </script>
-</body>
-</html>
+
+</div>
+
+<script>
+(function() {
+const lang = localStorage.getItem('selectedLang') || 'KO';
+const i18n = {
+KO: {
+guideMain: "어느 지역의 미션을
+
+
+
+시작해볼까요?",
+guideSub: "탐험하고 싶은 구역을 선택해 주세요.",
+river: "한강",
+nw: "서북권", nwDesc: "마포·서대문·은평",
+gb: "강북", gbDesc: "종로·중구·용산",
+ne: "동북권", neDesc: "성북·동대문·노원",
+sw: "서남권", swDesc: "강서·영등포·구로",
+gn: "강남", gnDesc: "강남·서초·관악",
+se: "동남권", seDesc: "성동·광진·송파",
+infoTitle: "추천 테마",
+infoDesc: "역사와 자연을 원하신다면 <span class='font-black underline'>강북</span>을, 트렌디한 쇼핑을 원하신다면 <span class='font-black underline'>강남</span>을 선택해 보세요!"
+},
+EN: {
+guideMain: "Which area's mission
+
+
+
+shall we start?",
+guideSub: "Please select the area you want to explore.",
+river: "Han River",
+nw: "Northwest", nwDesc: "Mapo, Seodaemun",
+gb: "Gangbuk", gbDesc: "Jongno, Jung-gu",
+ne: "Northeast", neDesc: "Seongbuk, Nowon",
+sw: "Southwest", swDesc: "Gangseo, Guro",
+gn: "Gangnam", gnDesc: "Gangnam, Seocho",
+se: "Southeast", seDesc: "Seongdong, Songpa",
+infoTitle: "Recommended",
+infoDesc: "Choose <span class='font-black underline'>Gangbuk</span> for history, or <span class='font-black underline'>Gangnam</span> for trendy shopping!"
+},
+JP: {
+guideMain: "どの地域のミッションを
+
+
+
+始めましょうか？",
+guideSub: "探検したい区域を選択してください。",
+river: "漢江",
+nw: "西北圏", nwDesc: "麻浦・西大門",
+gb: "江北", gbDesc: "鍾路・中区",
+ne: "東北圏", neDesc: "城北・蘆原",
+sw: "西南圏", swDesc: "江西・九老",
+gn: "江南", gnDesc: "江南・瑞草",
+se: "東남圏", seDesc: "城東・松坡",
+infoTitle: "おすすめ",
+infoDesc: "<span class='font-black underline'>江北</span>で歴史を、<span class='font-black underline'>江南</span>でトレンドを楽しんでください！"
+}
+};
+
+    const data = i18n[lang];
+    document.getElementById(&#39;guide-main&#39;).innerHTML = data.guideMain;
+    document.getElementById(&#39;guide-sub&#39;).innerText = data.guideSub;
+    document.getElementById(&#39;river-text&#39;).innerText = data.river;
+    document.getElementById(&#39;label-nw&#39;).innerText = data.nw;
+    document.getElementById(&#39;desc-nw&#39;).innerText = data.nwDesc;
+    document.getElementById(&#39;label-gb&#39;).innerText = data.gb;
+    document.getElementById(&#39;desc-gb&#39;).innerText = data.gbDesc;
+    document.getElementById(&#39;label-ne&#39;).innerText = data.ne;
+    document.getElementById(&#39;desc-ne&#39;).innerText = data.neDesc;
+    document.getElementById(&#39;label-sw&#39;).innerText = data.sw;
+    document.getElementById(&#39;desc-sw&#39;).innerText = data.swDesc;
+    document.getElementById(&#39;label-gn&#39;).innerText = data.gn;
+    document.getElementById(&#39;desc-gn&#39;).innerText = data.gnDesc;
+    document.getElementById(&#39;label-se&#39;).innerText = data.se;
+    document.getElementById(&#39;desc-se&#39;).innerText = data.seDesc;
+    document.getElementById(&#39;info-title&#39;).innerText = data.infoTitle;
+    document.getElementById(&#39;info-desc&#39;).innerHTML = data.infoDesc;
+})();
+
+
+</script>
