@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>K-Quest Home</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="pb-safe">
+
+    <!-- Main Container -->
+    <div class="max-w-2xl mx-auto min-h-screen bg-[#f8fafc]">
+        
+        <!-- Header -->
+        <header class="bg-white/80 backdrop-blur-md px-5 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+            <h1 class="text-2xl font-bold gradient-text tracking-tight">K-Quest</h1>
+            <div class="flex gap-3">
+                <button class="icon-btn" onclick="handleNotification()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                </button>
+                <button class="icon-btn" onclick="handleProfile()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Ad Banner Section -->
+        <section class="px-5 mt-5">
+            <div class="ad-banner bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-6 text-white relative overflow-hidden shadow-xl h-44 flex flex-col justify-center">
+                <div class="z-10">
+                    <span class="badge">Point Boost</span>
+                    <h2 class="text-2xl font-bold mt-2 leading-tight">광고 시청 시<br>포인트 2배 보상!</h2>
+                    <p class="text-sm text-indigo-100 mt-2 font-light opacity-90">상위 랭킹 도전의 지름길</p>
+                </div>
+                <div class="absolute right-[-10px] bottom-[-10px] opacity-20">
+                    <svg width="160" height="160" viewBox="0 0 24 24" fill="white"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" /></svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Region Selection -->
+        <section class="px-5 mt-10">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-xl font-bold text-gray-900">어디로 가시나요?</h3>
+                <button class="text-sm font-medium text-blue-600">전체 지역</button>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="category-card" onclick="selectRegion('Seoul')">
+                    <div class="icon-wrapper bg-orange-100">🏙️</div>
+                    <span class="label">서울</span>
+                </div>
+                <div class="category-card" onclick="selectRegion('Gyeonggi')">
+                    <div class="icon-wrapper bg-green-100">🌳</div>
+                    <span class="label">경기</span>
+                </div>
+                <div class="category-card" onclick="selectRegion('Anywhere')">
+                    <div class="icon-wrapper bg-blue-100">🌍</div>
+                    <span class="label">무관</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Missions Section -->
+        <section class="mt-10">
+            <div class="px-5 flex justify-between items-center mb-5">
+                <h3 class="text-xl font-bold text-gray-900">추천 인기 미션 🔥</h3>
+            </div>
+            <div class="no-scrollbar flex overflow-x-auto gap-5 px-5 pb-6" id="mission-container">
+                <!-- Mission 1 -->
+                <div class="mission-card min-w-[280px] sm:min-w-[320px]">
+                    <div class="card-image bg-slate-300">
+                        <span class="tag">#K-Drama</span>
+                        <div class="placeholder-text">[촬영지 이미지]</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <h4 class="card-title">이태원 클라쓰 성지순례</h4>
+                            <div class="cost text-amber-500">$$$</div>
+                        </div>
+                        <p class="card-desc">극중 박새로이가 꿈을 키운 단밤 포차와 남산 공원을 직접 경험하세요.</p>
+                        <div class="tag-group">
+                            <span class="info-tag bg-blue-50 text-blue-600">참여도 높음</span>
+                            <span class="info-tag bg-gray-100 text-gray-500">서울</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mission 2 -->
+                <div class="mission-card min-w-[280px] sm:min-w-[320px]">
+                    <div class="card-image bg-slate-300">
+                        <span class="tag">#Tradition</span>
+                        <div class="placeholder-text">[전통 시장 이미지]</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <h4 class="card-title">광장시장 먹거리 정복</h4>
+                            <div class="cost text-amber-500">$</div>
+                        </div>
+                        <p class="card-desc">빈대떡, 육회, 마약김밥까지! 한국의 길거리 음식을 정복하세요.</p>
+                        <div class="tag-group">
+                            <span class="info-tag bg-purple-50 text-purple-600">맛있음 주의</span>
+                            <span class="info-tag bg-gray-100 text-gray-500">서울</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ranking Section -->
+        <section class="px-5 mt-6 mb-10">
+            <div class="ranking-container bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <span class="text-2xl">🏆</span> TOP 플레이어
+                    </h3>
+                    <button class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full">상세 보기</button>
+                </div>
+                <div class="ranking-list space-y-5">
+                    <!-- Rank 1 -->
+                    <div class="rank-item flex items-center justify-between group">
+                        <div class="flex items-center gap-4">
+                            <div class="avatar-wrapper relative">
+                                <div class="avatar bg-indigo-100 ring-2 ring-indigo-500 ring-offset-2">👤</div>
+                                <span class="rank-num bg-amber-400">1</span>
+                            </div>
+                            <div class="player-info">
+                                <p class="name">Alex_Explorer</p>
+                                <p class="region">대한민국 전체 1위</p>
+                            </div>
+                        </div>
+                        <div class="point-info text-right">
+                            <p class="points text-indigo-600">12,450</p>
+                            <p class="unit">Points</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <nav class="bottom-nav fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/90 backdrop-blur-xl border-t border-gray-100 px-8 py-4 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-lg">
+            <button class="nav-item active">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span>홈</span>
+            </button>
+            <button class="nav-item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                <span>미션</span>
+            </button>
+            <button class="nav-item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                <span>랭킹</span>
+            </button>
+            <button class="nav-item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                <span>기록</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
