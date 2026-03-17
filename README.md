@@ -23,9 +23,15 @@ CSS3 (Tailwind CSS CDN 활용)
 JavaScript (Vanilla JS)
 
 📁 파일 구조
-
 index.html: 메인 레이아웃 및 마크업
-
+ Seoul.html
+ Gyeonggi.html
+ Gangwon.html
+ Chungcheong.html
+ Jeonla.html
+ Gyeongsang.html
+ Jeju.html  
+  
 style.css: 반응형 스타일링 및 애니메이션 정의
 
 script.js: 버튼 클릭 및 데이터 처리 로직
