@@ -1,256 +1,115 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K-Quest - Select Chungcheong Region</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-            background-color: #f8fafc;
-            -webkit-tap-highlight-color: transparent;
-        }
+<div class="animate-in slide-in-from-bottom-4">
+<!-- Guide Section -->
+<section class="px-6 py-8">
+<h2 id="guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
+여유와 낭만이 있는
 
-        header {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
 
-        /* Language Dropdown Styles */
-        .lang-container { position: relative; display: inline-block; }
-        .lang-btn {
-            background: #f1f5f9;
-            padding: 0.4rem 0.8rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #475569;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            border: 1px solid #e2e8f0;
-        }
-        .lang-dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: calc(100% + 8px);
-            background: white;
-            min-width: 140px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            border-radius: 16px;
-            overflow: hidden;
-            z-index: 100;
-            border: 1px solid #f1f5f9;
-        }
-        .lang-dropdown.show { display: block; }
-        .lang-option {
-            padding: 0.8rem 1rem;
-            font-size: 0.875rem;
-            color: #475569;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .lang-option:hover { background: #f8fafc; }
-        .lang-option.active {
-            color: #4f46e5;
-            font-weight: bold;
-            background: #eef2ff;
-        }
 
-        /* Region Cards */
-        .region-card {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid #f1f5f9;
-        }
-        .region-card:active {
-            transform: scale(0.96);
-            background-color: #f0f7ff;
-        }
+충청도로 오세요!
+</h2>
+<p id="guide-sub" class="text-slate-500 mt-2 text-sm font-bold">탐험하고 싶은 지역을 선택해 주세요.</p>
+</section>
 
-        .pb-safe {
-            padding-bottom: calc(6rem + env(safe-area-inset-bottom));
-        }
-    </style>
-</head>
-<body class="text-slate-900">
-
-    <div class="max-w-2xl mx-auto min-h-screen flex flex-col pb-safe">
-        
-        <!-- [고정 상단바] index.html 및 seoul.html과 동일한 구조 -->
-        <header class="bg-white/90 backdrop-blur-md px-5 py-3 flex justify-between items-center sticky top-0 z-[100] border-b border-slate-100">
-            <div class="flex items-center gap-2">
-                <button onclick="history.back()" class="p-1.5 -ml-1 rounded-full hover:bg-slate-100 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <h1 id="header-title" class="text-lg font-bold text-slate-900">충청 지역 선택</h1>
-            </div>
-            
-            <div class="flex items-center gap-2">
-                <div class="lang-container">
-                    <button class="lang-btn shadow-sm" onclick="toggleLangDropdown(event)">
-                        <span class="text-blue-500">🌐</span>
-                        <span id="currentLangDisplay">KO</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                    <div id="langDropdown" class="lang-dropdown">
-                        <div class="lang-option" data-lang="KO" onclick="changeLanguage('KO')"><span>🇰🇷</span> 한국어</div>
-                        <div class="lang-option" data-lang="EN" onclick="changeLanguage('EN')"><span>🇺🇸</span> English</div>
-                        <div class="lang-option" data-lang="JP" onclick="changeLanguage('JP')"><span>🇯🇵</span> 日本語</div>
-                    </div>
-                </div>
-                <button class="p-2 text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg></button>
-            </div>
-        </header>
-
-        <!-- Guide Section -->
-        <section class="px-6 py-8">
-            <h2 id="guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
-                여유와 낭만이 있는<br>충청도로 오세요!
-            </h2>
-            <p id="guide-sub" class="text-slate-500 mt-2 text-sm font-bold">탐험하고 싶은 지역을 선택해 주세요.</p>
-        </section>
-
-        <!-- Region Cards Grid -->
-        <section class="px-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px]">
-                <div class="text-4xl mb-3">🌳</div>
-                <span id="label-cb" class="text-sm font-black text-slate-900">충청북도</span>
-                <p id="desc-cb" class="text-xs text-slate-400 font-bold mt-1">청주 · 단양 · 제천</p>
-            </div>
-
-            <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px]">
-                <div class="text-4xl mb-3">🏖️</div>
-                <span id="label-cn" class="text-sm font-black text-slate-900">충청남도</span>
-                <p id="desc-cn" class="text-xs text-slate-400 font-bold mt-1">천안 · 태안 · 보령</p>
-            </div>
-
-            <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px] sm:col-span-2">
-                <div class="text-4xl mb-3">🔬</div>
-                <span id="label-ds" class="text-sm font-black text-slate-900">대전 / 세종</span>
-                <p id="desc-ds" class="text-xs text-slate-400 font-bold mt-1">과학의 도시 & 행정수도</p>
-            </div>
-        </section>
-
-        <!-- Info Card -->
-        <section class="px-5 my-10">
-            <div class="bg-indigo-600 rounded-3xl p-6 flex items-start gap-4 shadow-xl shadow-indigo-100">
-                <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
-                <div>
-                    <h4 id="info-title" class="text-sm font-black text-white">추천 테마</h4>
-                    <p id="info-desc" class="text-xs text-indigo-50 mt-2 leading-relaxed font-medium">
-                        자연의 힐링을 원하신다면 <span class='font-black underline'>단양/태안</span>을, <br>
-                        도시의 스마트함을 원하신다면 <span class='font-black underline'>대전/세종</span>을 선택해 보세요!
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Bottom Navigation -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/80 backdrop-blur-2xl border-t border-slate-100 px-10 py-4 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.04)]">
-            <button onclick="location.href='index.html'" class="flex flex-col items-center gap-1 text-indigo-600">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                <span id="nav-home" class="text-[10px] font-bold">홈</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 text-slate-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                <span id="nav-mission" class="text-[10px] font-bold">미션</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 text-slate-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-                <span id="nav-rank" class="text-[10px] font-bold">랭킹</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 text-slate-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                <span id="nav-record" class="text-[10px] font-bold">기록</span>
-            </button>
-        </nav>
+<!-- Region Cards Grid -->
+<section class="px-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px]" onclick="alert('충북 퀘스트 준비 중')">
+        <div class="text-4xl mb-3">🌳</div>
+        <span id="label-cb" class="text-sm font-black text-slate-900">충청북도</span>
+        <p id="desc-cb" class="text-xs text-slate-400 font-bold mt-1">청주 · 단양 · 제천</p>
     </div>
 
-    <script>
-        const i18n = {
-            KO: {
-                title: "충청 지역 선택",
-                guideMain: "여유와 낭만이 있는<br>충청도로 오세요!",
-                guideSub: "탐험하고 싶은 지역을 선택해 주세요.",
-                cb: "충청북도", cbDesc: "청주 · 단양 · 제천",
-                cn: "충청남도", cnDesc: "천안 · 태안 · 보령",
-                ds: "대전 / 세종", dsDesc: "과학의 도시 & 행정수도",
-                infoTitle: "추천 테마",
-                infoDesc: "자연의 힐링을 원하신다면 <span class='font-black underline'>단양/태안</span>을, 도시의 스마트함을 원하신다면 <span class='font-black underline'>대전/세종</span>을 선택해 보세요!",
-                home: "홈", mission: "미션", rank: "랭킹", record: "기록"
-            },
-            EN: {
-                title: "Select Region",
-                guideMain: "Find relaxation and<br>romance in Chungcheong!",
-                guideSub: "Please select the area you want to explore.",
-                cb: "Chungcheongbuk-do", cbDesc: "Cheongju, Danyang",
-                cn: "Chungcheongnam-do", cnDesc: "Cheonan, Taean",
-                ds: "Daejeon / Sejong", dsDesc: "Science & Administration",
-                infoTitle: "Recommended",
-                infoDesc: "Choose <span class='font-black underline'>Danyang/Taean</span> for healing nature, or <span class='font-black underline'>Daejeon/Sejong</span> for smart cities!",
-                home: "Home", mission: "Mission", rank: "Ranking", record: "Record"
-            },
-            JP: {
-                title: "忠清地域選択",
-                guideMain: "余裕とロマンがある<br>忠清道へお越しください！",
-                guideSub: "探検したい区域を選択してください。",
-                cb: "忠清北道", cbDesc: "清州 · 丹陽 · 堤川",
-                cn: "忠清南道", cnDesc: "天安 · 泰安 · 保寧",
-                ds: "大田 / 世宗", dsDesc: "科学の都市 & 行政首都",
-                infoTitle: "おすすめ",
-                infoDesc: "自然の癒やしなら <span class='font-black underline'>丹陽/泰安</span>を、都市のスマートさなら <span class='font-black underline'>大田/世宗</span>を選択してください！",
-                home: "ホーム", mission: "ミッション", rank: "ランキング", record: "記録"
-            }
-        };
+    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px]" onclick="alert('충남 퀘스트 준비 중')">
+        <div class="text-4xl mb-3">🏖️</div>
+        <span id="label-cn" class="text-sm font-black text-slate-900">충청남도</span>
+        <p id="desc-cn" class="text-xs text-slate-400 font-bold mt-1">천안 · 태안 · 보령</p>
+    </div>
 
-        function toggleLangDropdown(e) {
-            e.stopPropagation();
-            document.getElementById('langDropdown').classList.toggle('show');
-        }
+    <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[160px] sm:col-span-2" onclick="alert('대전/세종 퀘스트 준비 중')">
+        <div class="text-4xl mb-3">🔬</div>
+        <span id="label-ds" class="text-sm font-black text-slate-900">대전 / 세종</span>
+        <p id="desc-ds" class="text-xs text-slate-400 font-bold mt-1">과학의 도시 & 행정수도</p>
+    </div>
+</section>
 
-        function changeLanguage(lang) {
-            document.getElementById('currentLangDisplay').innerText = lang;
-            const data = i18n[lang];
-            
-            document.getElementById('header-title').innerText = data.title;
-            document.getElementById('guide-main').innerHTML = data.guideMain;
-            document.getElementById('guide-sub').innerText = data.guideSub;
-            document.getElementById('label-cb').innerText = data.cb;
-            document.getElementById('desc-cb').innerText = data.cbDesc;
-            document.getElementById('label-cn').innerText = data.cn;
-            document.getElementById('desc-cn').innerText = data.cnDesc;
-            document.getElementById('label-ds').innerText = data.ds;
-            document.getElementById('desc-ds').innerText = data.dsDesc;
-            document.getElementById('info-title').innerText = data.infoTitle;
-            document.getElementById('info-desc').innerHTML = data.infoDesc;
-            document.getElementById('nav-home').innerText = data.home;
-            document.getElementById('nav-mission').innerText = data.mission;
-            document.getElementById('nav-rank').innerText = data.rank;
-            document.getElementById('nav-record').innerText = data.record;
+<!-- Info Card -->
+<section class="px-5 my-10">
+    <div class="bg-indigo-600 rounded-3xl p-6 flex items-start gap-4 shadow-xl shadow-indigo-100">
+        <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
+        <div>
+            <h4 id="info-title" class="text-sm font-black text-white">추천 테마</h4>
+            <p id="info-desc" class="text-xs text-indigo-50 mt-2 leading-relaxed font-medium">
+                자연의 힐링을 원하신다면 <span class='font-black underline'>단양/태안</span>을, <br>
+                도시의 스마트함을 원하신다면 <span class='font-black underline'>대전/세종</span>을 선택해 보세요!
+            </p>
+        </div>
+    </div>
+</section>
 
-            document.querySelectorAll('.lang-option').forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.lang === lang);
-            });
-            document.getElementById('langDropdown').classList.remove('show');
-            localStorage.setItem('selectedLang', lang);
-        }
 
-        window.onclick = function() {
-            document.getElementById('langDropdown').classList.remove('show');
-        };
+</div>
 
-        window.onload = function() {
-            const savedLang = localStorage.getItem('selectedLang') || 'KO';
-            changeLanguage(savedLang);
-        };
-    </script>
-</body>
-</html>
+<script>
+/**
+* index.html에 이미 정의된 i18n 로직이 있을 경우 이를 활용하도록 구성하거나,
+* 파일 로드 시점에 언어팩을 적용하는 간단한 함수입니다.
+*/
+(function() {
+const lang = localStorage.getItem('selectedLang') || 'KO';
+const data = {
+KO: {
+guideMain: "여유와 낭만이 있는
+
+
+
+충청도로 오세요!",
+guideSub: "탐험하고 싶은 지역을 선택해 주세요.",
+cb: "충청북도", cbDesc: "청주 · 단양 · 제천",
+cn: "충청남도", cnDesc: "천안 · 태안 · 보령",
+ds: "대전 / 세종", dsDesc: "과학의 도시 & 행정수도",
+infoTitle: "추천 테마",
+infoDesc: "자연의 힐링을 원하신다면 <span class='font-black underline'>단양/태안</span>을, 도시의 스마트함을 원하신다면 <span class='font-black underline'>대전/세종</span>을 선택해 보세요!"
+},
+EN: {
+guideMain: "Find relaxation and
+
+
+
+romance in Chungcheong!",
+guideSub: "Please select the area you want to explore.",
+cb: "Chungcheongbuk-do", cbDesc: "Cheongju, Danyang",
+cn: "Chungcheongnam-do", cnDesc: "Cheonan, Taean",
+ds: "Daejeon / Sejong", dsDesc: "Science & Administration",
+infoTitle: "Recommended",
+infoDesc: "Choose <span class='font-black underline'>Danyang/Taean</span> for healing nature, or <span class='font-black underline'>Daejeon/Sejong</span> for smart cities!"
+},
+JP: {
+guideMain: "余裕とロマンがある
+
+
+
+忠清道へお越しください！",
+guideSub: "探検したい区域を選択してください。",
+cb: "忠清北道", cbDesc: "清州 · 丹陽 · 堤川",
+cn: "忠清南道", cnDesc: "天安 · 泰安 · 保寧",
+ds: "大田 / 世宗", dsDesc: "科学の都市 & 行政首都",
+infoTitle: "おすすめ",
+infoDesc: "自然の癒やしなら <span class='font-black underline'>丹陽/泰安</span>을, 都市のスマートさなら <span class='font-black underline'>大田/世宗</span>を選択してください！"
+}
+};
+
+    const res = data[lang];
+    document.getElementById(&#39;guide-main&#39;).innerHTML = res.guideMain;
+    document.getElementById(&#39;guide-sub&#39;).innerText = res.guideSub;
+    document.getElementById(&#39;label-cb&#39;).innerText = res.cb;
+    document.getElementById(&#39;desc-cb&#39;).innerText = res.cbDesc;
+    document.getElementById(&#39;label-cn&#39;).innerText = res.cn;
+    document.getElementById(&#39;desc-cn&#39;).innerText = res.cnDesc;
+    document.getElementById(&#39;label-ds&#39;).innerText = res.ds;
+    document.getElementById(&#39;desc-ds&#39;).innerText = res.dsDesc;
+    document.getElementById(&#39;info-title&#39;).innerText = res.infoTitle;
+    document.getElementById(&#39;info-desc&#39;).innerHTML = res.infoDesc;
+})();
+
+
+</script>
