@@ -3,81 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>K-Quest - Jeju</title>
+    <title>K-Quest - Select Jeju Region</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; background-color: #f8fafc; }
-        header { background: white; border-bottom: 1px solid #f1f5f9; }
-        .lang-btn { background: #f1f5f9; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #475569; display: flex; align-items: center; gap: 4px; border: 1px solid #e2e8f0; }
-        .lang-dropdown { display: none; position: absolute; right: 0; top: 40px; background: white; min-width: 120px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; z-index: 100; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+            background-color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        header {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* Language Dropdown Styles */
+        .lang-container { position: relative; display: inline-block; }
+        .lang-btn {
+            background: #f1f5f9;
+            padding: 0.4rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: white;
+            min-width: 140px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            z-index: 100;
+            border: 1px solid #f1f5f9;
+        }
         .lang-dropdown.show { display: block; }
-        .region-card { background: white; border-radius: 20px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border: 1px solid #f1f5f9; text-align: center; height: 120px; display: flex; flex-direction: column; justify-content: center; }
+        .lang-option {
+            padding: 0.8rem 1rem;
+            font-size: 0.875rem;
+            color: #475569;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lang-option:hover { background: #f8fafc; }
+        .lang-option.active {
+            color: #f97316;
+            font-weight: bold;
+            background: #fff7ed;
+        }
+
+        /* Region Cards */
+        .region-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #f1f5f9;
+        }
+        .region-card:active {
+            transform: scale(0.96);
+            background-color: #fff7ed;
+        }
+
+        .pb-safe {
+            padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+        }
     </style>
 </head>
 <body class="text-slate-900">
-    <div class="max-w-md mx-auto min-h-screen flex flex-col pb-24">
-        <header class="px-5 py-4 flex justify-between items-center sticky top-0 z-[100]">
-            <div class="flex items-center gap-3">
-                <button onclick="history.back()" class="p-1 text-slate-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+
+    <div class="max-w-2xl mx-auto min-h-screen flex flex-col pb-safe">
+        
+        <!-- [고정 상단바] -->
+        <header class="bg-white/90 backdrop-blur-md px-5 py-3 flex justify-between items-center sticky top-0 z-[100] border-b border-slate-100">
+            <div class="flex items-center gap-2">
+                <button onclick="history.back()" class="p-1.5 -ml-1 rounded-full hover:bg-slate-100 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
                 </button>
-                <h1 id="header-title" class="text-lg font-bold">제주 지역 선택</h1>
+                <h1 id="header-title" class="text-lg font-bold text-slate-900">제주 지역 선택</h1>
             </div>
-            <div class="flex items-center gap-3">
-                <div class="relative">
-                    <button onclick="toggleLang(event)" class="lang-btn">
-                        <span class="text-blue-400">🌐</span><span id="currentLang">KO</span><span class="text-[10px] opacity-40">▼</span>
+            
+            <div class="flex items-center gap-2">
+                <div class="lang-container">
+                    <button class="lang-btn shadow-sm" onclick="toggleLangDropdown(event)">
+                        <span class="text-orange-500">🌐</span>
+                        <span id="currentLangDisplay">KO</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+                        </svg>
                     </button>
                     <div id="langDropdown" class="lang-dropdown">
-                        <div class="p-3 text-sm cursor-pointer hover:bg-slate-50" onclick="setLang('KO')">🇰🇷 KO</div>
-                        <div class="p-3 text-sm cursor-pointer hover:bg-slate-50" onclick="setLang('EN')">🇺🇸 EN</div>
+                        <div class="lang-option" data-lang="KO" onclick="changeLanguage('KO')"><span>🇰🇷</span> 한국어</div>
+                        <div class="lang-option" data-lang="EN" onclick="changeLanguage('EN')"><span>🇺🇸</span> English</div>
+                        <div class="lang-option" data-lang="JP" onclick="changeLanguage('JP')"><span>🇯🇵</span> 日本語</div>
                     </div>
                 </div>
-                <button class="text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg></button>
+                <button class="p-2 text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg></button>
             </div>
         </header>
 
-        <main class="px-6 py-8">
-            <h2 id="guide-text" class="text-2xl font-black leading-tight">환상의 섬, 제주도의<br>미션을 시작하세요!</h2>
-            <div class="grid grid-cols-2 gap-4 mt-8">
-                <div class="region-card">🗿<br><span id="region-jeju" class="text-xs font-bold mt-2 block">제주시</span></div>
-                <div class="region-card">🍊<br><span id="region-seogwipo" class="text-xs font-bold mt-2 block">서귀포시</span></div>
-                <div class="region-card">🏝️<br><span id="region-islands" class="text-xs font-bold mt-2 block">부속 섬 (우도/마라/가파)</span></div>
+        <!-- Guide Section -->
+        <section class="px-6 py-8">
+            <h2 id="guide-main" class="text-2xl font-black text-slate-900 leading-tight tracking-tight">
+                환상의 섬, 제주도의<br>미션을 시작하세요!
+            </h2>
+            <p id="guide-sub" class="text-slate-500 mt-2 text-sm font-bold">탐험하고 싶은 지역을 선택해 주세요.</p>
+        </section>
+
+        <!-- Region Cards Grid -->
+        <section class="px-4 grid grid-cols-2 gap-4">
+            <!-- 제주시 (Airport, Tap-dong, Aewol) -->
+            <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]">
+                <div class="text-3xl mb-2">🗿</div>
+                <span id="label-jeju" class="text-sm font-black text-slate-900">제주시 권역</span>
+                <p id="desc-jeju" class="text-[10px] text-slate-400 font-bold mt-1">공항 · 애월 · 함덕</p>
             </div>
-        </main>
+
+            <!-- 서귀포시 (Jungmun, Seogwipo Port) -->
+            <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]">
+                <div class="text-3xl mb-2">🍊</div>
+                <span id="label-seogwipo" class="text-sm font-black text-slate-900">서귀포 권역</span>
+                <p id="desc-seogwipo" class="text-[10px] text-slate-400 font-bold mt-1">중문 · 올레시장 · 남원</p>
+            </div>
+
+            <!-- 동부 부속섬 (Udo, Seongsan) -->
+            <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]">
+                <div class="text-3xl mb-2">🏝️</div>
+                <span id="label-east-islands" class="text-sm font-black text-slate-900">동부 & 부속섬</span>
+                <p id="desc-east-islands" class="text-[10px] text-slate-400 font-bold mt-1">성산 · 우도 · 구좌</p>
+            </div>
+
+            <!-- 서부 부속섬 (Gapa, Mara, Hallim) -->
+            <div class="region-card bg-white rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center text-center cursor-pointer min-h-[140px]">
+                <div class="text-3xl mb-2">⛴️</div>
+                <span id="label-west-islands" class="text-sm font-black text-slate-900">서부 & 부속섬</span>
+                <p id="desc-west-islands" class="text-[10px] text-slate-400 font-bold mt-1">한림 · 가파도 · 마라도</p>
+            </div>
+        </section>
+
+        <!-- Info Card -->
+        <section class="px-5 my-10">
+            <div class="bg-orange-500 rounded-3xl p-6 flex items-start gap-4 shadow-xl shadow-orange-100">
+                <div class="text-xl bg-white/20 p-2 rounded-xl">💡</div>
+                <div>
+                    <h4 id="info-title" class="text-sm font-black text-white">제주도 여행 꿀팁</h4>
+                    <p id="info-desc" class="text-xs text-orange-50 mt-2 leading-relaxed font-medium">
+                        제주의 바람과 자연을 느끼고 싶다면 <span class='font-black underline'>부속 섬</span> 탐방을, <br>
+                        로컬 맛집과 문화를 즐기려면 <span class='font-black underline'>제주시/서귀포</span> 시장 투어를 추천해요!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/80 backdrop-blur-2xl border-t border-slate-100 px-10 py-4 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.04)]">
+            <button onclick="location.href='index.html'" class="flex flex-col items-center gap-1 text-orange-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span id="nav-home" class="text-[10px] font-bold">홈</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 text-slate-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                <span id="nav-mission" class="text-[10px] font-bold">미션</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 text-slate-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                <span id="nav-rank" class="text-[10px] font-bold">랭킹</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 text-slate-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                <span id="nav-record" class="text-[10px] font-bold">기록</span>
+            </button>
+        </nav>
     </div>
+
     <script>
-        const i18n = { 
-            KO: { 
-                title: "제주 지역 선택", 
-                guide: "환상의 섬, 제주도의<br>미션을 시작하세요!",
-                jeju: "제주시",
-                seogwipo: "서귀포시",
-                islands: "부속 섬 (우도/마라/가파)"
-            }, 
-            EN: { 
-                title: "Select Jeju", 
-                guide: "Start your mission in<br>Jeju, the fantasy island!",
-                jeju: "Jeju City",
-                seogwipo: "Seogwipo City",
-                islands: "Sub-islands (Udo/Mara/Gapa)"
-            } 
+        const i18n = {
+            KO: {
+                title: "제주 지역 선택",
+                guideMain: "환상의 섬, 제주도의<br>미션을 시작하세요!",
+                guideSub: "탐험하고 싶은 지역을 선택해 주세요.",
+                jeju: "제주시 권역", jejuDesc: "공항 · 애월 · 함덕",
+                seogwipo: "서귀포 권역", seogwipoDesc: "중문 · 올레시장 · 남원",
+                eastIslands: "동부 & 부속섬", eastIslandsDesc: "성산 · 우도 · 구좌",
+                westIslands: "서부 & 부속섬", westIslandsDesc: "한림 · 가파도 · 마라도",
+                infoTitle: "제주도 여행 꿀팁",
+                infoDesc: "제주의 바람과 자연을 느끼고 싶다면 <span class='font-black underline'>부속 섬</span> 탐방을, 로컬 맛집과 문화를 즐기려면 <span class='font-black underline'>제주시/서귀포</span> 시장 투어를 추천해요!",
+                home: "홈", mission: "미션", rank: "랭킹", record: "기록"
+            },
+            EN: {
+                title: "Select Jeju",
+                guideMain: "Start your mission in<br>Jeju, the fantasy island!",
+                guideSub: "Please select the area you want to explore.",
+                jeju: "Jeju City Area", jejuDesc: "Airport, Aewol, Hamdeok",
+                seogwipo: "Seogwipo Area", seogwipoDesc: "Jungmun, Market, Namwon",
+                eastIslands: "East & Sub-islands", eastIslandsDesc: "Seongsan, Udo, Gujwa",
+                westIslands: "West & Sub-islands", westIslandsDesc: "Hallim, Gapa, Mara",
+                infoTitle: "Jeju Travel Tips",
+                infoDesc: "Try <span class='font-black underline'>Sub-islands</span> for nature and wind, or explore <span class='font-black underline'>Traditional Markets</span> for local food and culture!",
+                home: "Home", mission: "Mission", rank: "Ranking", record: "Record"
+            },
+            JP: {
+                title: "済州地域選択",
+                guideMain: "幻想の島、済州島での<br>ミッションを開始しましょう！",
+                guideSub: "探検したい区域を選択してください。",
+                jeju: "済州市区域", jejuDesc: "空港 · 涯月 · 咸徳",
+                seogwipo: "西帰浦区域", seogwipoDesc: "中文 · 市場 · 南元",
+                eastIslands: "東部 & 離島", eastIslandsDesc: "城山 · 牛島 · 旧左",
+                westIslands: "西部 & 離島", westIslandsDesc: "翰林 · 加波島 · 馬羅島",
+                infoTitle: "済州島旅行のコツ",
+                infoDesc: "済州の風と自然を感じたいなら <span class='font-black underline'>離島</span>探訪を、地元のグルメを楽しむなら <span class='font-black underline'>伝統市場</span>ツアーがおすすめです！",
+                home: "ホーム", mission: "ミッション", rank: "ランキング", record: "記録"
+            }
         };
-        
-        function toggleLang(e) { e.stopPropagation(); document.getElementById('langDropdown').classList.toggle('show'); }
-        
-        function setLang(lang) {
-            document.getElementById('currentLang').innerText = lang;
-            document.getElementById('header-title').innerText = i18n[lang].title;
-            document.getElementById('guide-text').innerHTML = i18n[lang].guide;
-            document.getElementById('region-jeju').innerText = i18n[lang].jeju;
-            document.getElementById('region-seogwipo').innerText = i18n[lang].seogwipo;
-            document.getElementById('region-islands').innerText = i18n[lang].islands;
-            localStorage.setItem('selectedLang', lang);
-            document.getElementById('langDropdown').classList.remove('show');
+
+        function toggleLangDropdown(e) {
+            e.stopPropagation();
+            document.getElementById('langDropdown').classList.toggle('show');
         }
-        
-        window.onload = () => setLang(localStorage.getItem('selectedLang') || 'KO');
+
+        function changeLanguage(lang) {
+            document.getElementById('currentLangDisplay').innerText = lang;
+            const data = i18n[lang];
+            
+            document.getElementById('header-title').innerText = data.title;
+            document.getElementById('guide-main').innerHTML = data.guideMain;
+            document.getElementById('guide-sub').innerText = data.guideSub;
+            document.getElementById('label-jeju').innerText = data.jeju;
+            document.getElementById('desc-jeju').innerText = data.jejuDesc;
+            document.getElementById('label-seogwipo').innerText = data.seogwipo;
+            document.getElementById('desc-seogwipo').innerText = data.seogwipoDesc;
+            document.getElementById('label-east-islands').innerText = data.eastIslands;
+            document.getElementById('desc-east-islands').innerText = data.eastIslandsDesc;
+            document.getElementById('label-west-islands').innerText = data.westIslands;
+            document.getElementById('desc-west-islands').innerText = data.westIslandsDesc;
+            document.getElementById('info-title').innerText = data.infoTitle;
+            document.getElementById('info-desc').innerHTML = data.infoDesc;
+            document.getElementById('nav-home').innerText = data.home;
+            document.getElementById('nav-mission').innerText = data.mission;
+            document.getElementById('nav-rank').innerText = data.rank;
+            document.getElementById('nav-record').innerText = data.record;
+
+            document.querySelectorAll('.lang-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.lang === lang);
+            });
+            document.getElementById('langDropdown').classList.remove('show');
+            localStorage.setItem('selectedLang', lang);
+        }
+
+        window.onclick = function() {
+            document.getElementById('langDropdown').classList.remove('show');
+        };
+
+        window.onload = function() {
+            const savedLang = localStorage.getItem('selectedLang') || 'KO';
+            changeLanguage(savedLang);
+        };
     </script>
 </body>
 </html>
