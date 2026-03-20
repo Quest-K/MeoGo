@@ -1,54 +1,56 @@
-<div id="quiz-app-container" class="px-5 py-6 animate-[fadeIn_0.3s_ease-out] min-h-screen bg-slate-50">
-    <!-- 퀴즈 헤더 정보 -->
+<div id="quiz-app-container" class="px-5 py-6 animate-[fadeIn_0.3s_ease-out] min-h-screen bg-slate-50 relative">
+    <!-- 로딩 인디케이터 -->
+    <div id="ai-loading" class="hidden absolute inset-0 bg-white/80 backdrop-blur-md z-[200] flex flex-col items-center justify-center">
+        <div class="loader mb-4"></div>
+        <p class="text-indigo-600 font-bold animate-pulse" id="loading-msg">AI가 퀴즈를 번역 중입니다...</p>
+    </div>
+
+    <!-- Quiz Header -->
     <div class="flex justify-between items-end mb-6">
         <div>
-            <span id="quiz-cat" class="bg-indigo-100 text-indigo-600 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-wider">K-Life</span>
-            <h2 class="text-2xl font-black text-slate-900 mt-1">Daily Quiz</h2>
+            <span id="quiz-cat" class="bg-indigo-100 text-indigo-600 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-wider">Loading...</span>
+            <h2 class="text-2xl font-black text-slate-900 mt-1" data-quiz-lang="title">Daily Quiz</h2>
         </div>
         <div class="text-right">
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Question</p>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest" data-quiz-lang="q-label">Question</p>
             <p class="text-xl font-black text-indigo-600"><span id="q-num">1</span><span class="text-slate-300 mx-1">/</span><span id="q-total">5</span></p>
         </div>
     </div>
 
-    <!-- 진행 상황 바 -->
+    <!-- Progress Bar -->
     <div class="w-full h-2 bg-slate-200 rounded-full mb-8 overflow-hidden">
         <div id="q-progress" class="h-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-all duration-500" style="width: 20%"></div>
     </div>
 
-    <!-- 퀴즈 질문 카드 -->
+    <!-- Question Card -->
     <div id="q-card" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-6 min-h-[220px] flex items-center justify-center relative overflow-hidden">
         <p id="q-text" class="text-lg font-bold text-slate-800 text-center leading-relaxed">
-            게임을 불러오는 중입니다...
+            Loading...
         </p>
-        
-        <!-- 정답/오답 피드백 레이어 -->
         <div id="q-feedback" class="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
             <span id="q-feedback-icon" class="text-7xl"></span>
         </div>
     </div>
 
-    <!-- 보기 선택지 영역 -->
-    <div id="q-options" class="grid grid-cols-1 gap-3 mb-10">
-        <!-- 자바스크립트가 버튼을 생성합니다 -->
-    </div>
+    <!-- Options -->
+    <div id="q-options" class="grid grid-cols-1 gap-3 mb-10"></div>
 
-    <!-- 결과 화면 (평소엔 숨김) -->
+    <!-- Result Screen -->
     <div id="q-result" class="hidden fixed inset-0 bg-white z-[150] flex flex-col items-center justify-center p-8 text-center">
         <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mb-6 animate-bounce">
             <span class="text-5xl">🎁</span>
         </div>
-        <h3 class="text-3xl font-black text-slate-900 mb-2">Excellent!</h3>
-        <p class="text-slate-500 mb-8 font-medium">한국 문화 박사가 되셨네요!<br>보상을 확인하세요.</p>
+        <h3 class="text-3xl font-black text-slate-900 mb-2" data-quiz-lang="res-title">Excellent!</h3>
+        <p class="text-slate-500 mb-8 font-medium" data-quiz-lang="res-sub">You've become a Korea expert!</p>
         
         <div class="w-full bg-slate-50 rounded-[2rem] p-6 mb-10 border border-slate-100">
             <div class="flex justify-between items-center px-4">
                 <div class="text-left">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Correct</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-quiz-lang="res-correct">Correct</p>
                     <p id="res-count" class="text-2xl font-black text-slate-800">0/5</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">Reward</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-quiz-lang="res-reward">Reward</p>
                     <p id="res-points" class="text-2xl font-black text-indigo-600">+0P</p>
                 </div>
             </div>
@@ -56,33 +58,101 @@
 
         <div class="w-full space-y-3">
             <button onclick="handleQuizReward('ad')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-xl flex items-center justify-center gap-2 active:scale-95 transition-transform">
-                <span>📺</span> 광고 보고 포인트 2배 받기
+                <span data-quiz-lang="btn-ad">📺 Watch AD for 2x Points</span>
             </button>
             <button onclick="handleQuizReward('normal')" class="w-full bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold active:scale-95 transition-transform">
-                일반 보상 수령
+                <span data-quiz-lang="btn-normal">Claim Reward</span>
             </button>
         </div>
     </div>
 </div>
 
 <script>
-    (function() {
-        const quizList = [
-            { cat: 'Food', q: "한국에서 삼겹살을 먹은 뒤 남은 양념에 밥을 볶아 먹는 것을 무엇이라 할까요?", opts: ["비빔밥", "볶음밥", "덮밥", "주먹밥"], ans: 1 },
-            { cat: 'K-Life', q: "한국의 편의점에서 가장 인기 있는, 얼음컵에 부어 마시는 음료 형태는?", opts: ["캔음료", "병음료", "파우치 음료", "직접 제조"], ans: 2 },
-            { cat: 'Activity', q: "서울 한강에서 쉽게 대여할 수 있는 공공 자전거의 이름은?", opts: ["따릉이", "타슈", "누비자", "어울링"], ans: 0 },
-            { cat: 'Music', q: "전 세계적으로 유명한 BTS(방탄소년단)의 팬클럽 이름은?", opts: ["Blink", "Army", "Once", "Reveluv"], ans: 1 },
-            { cat: 'Photo', q: "한복을 입으면 무료로 입장할 수 있는 서울의 대표 궁궐은?", opts: ["덕수궁", "창덕궁", "경복궁", "창경궁"], ans: 2 }
-        ];
+    (async function() {
+        const apiKey = ""; // API Key는 환경에서 자동 제공됨
+        const lang = localStorage.getItem('selectedLang') || 'KO';
+        
+        // 원본 한국어 데이터
+        const baseQuizData = {
+            ui: {
+                title: "오늘의 퀴즈", qLabel: "질문", resTitle: "대단해요!", resSub: "한국 문화 박사가 되셨네요!<br>보상을 확인하세요.",
+                resCorrect: "정답 수", resReward: "보상", btnAd: "📺 광고 보고 포인트 2배", btnNormal: "일반 보상 수령",
+                alertAd: "광고 시청 완료! 보상이 2배로 적립되었습니다.", alertNormal: "보상이 적립되었습니다.",
+                loading: "AI가 퀴즈를 번역 중입니다..."
+            },
+            data: [
+                { cat: '음식', q: "삼겹살을 먹은 뒤 남은 양념에 밥을 볶아 먹는 것은?", opts: ["비빔밥", "볶음밥", "덮밥", "주먹밥"], ans: 1 },
+                { cat: '라이프', q: "편의점에서 얼음컵에 부어 마시는 음료 형태는?", opts: ["캔", "병", "파우치", "직접제조"], ans: 2 },
+                { cat: '액티비티', q: "한강의 공공 자전거 이름은?", opts: ["따릉이", "타슈", "누비자", "어울링"], ans: 0 },
+                { cat: '음악', q: "BTS의 공식 팬클럽 이름은?", opts: ["Blink", "Army", "Once", "Reveluv"], ans: 1 },
+                { cat: '포토', q: "한복 착용 시 무료 입장이 가능한 궁궐은?", opts: ["덕수궁", "창덕궁", "경복궁", "창경궁"], ans: 2 }
+            ]
+        };
 
+        let currentLangSet = baseQuizData;
         let currentIdx = 0;
         let score = 0;
 
+        // Gemini AI 번역 함수 (지수 백오프 포함)
+        async function translateWithAI(targetLang) {
+            if (targetLang === 'KO') return baseQuizData;
+            
+            const loadingEl = document.getElementById('ai-loading');
+            loadingEl.classList.remove('hidden');
+
+            const prompt = `Translate the following JSON object into ${targetLang}. Keep the structure exactly the same. Only return the JSON. 
+            Object: ${JSON.stringify(baseQuizData)}`;
+
+            const fetchWithRetry = async (url, options, retries = 5, backoff = 1000) => {
+                try {
+                    const res = await fetch(url, options);
+                    if (!res.ok) throw new Error('API Error');
+                    return await res.json();
+                } catch (err) {
+                    if (retries <= 0) throw err;
+                    await new Promise(resolve => setTimeout(resolve, backoff));
+                    return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                }
+            };
+
+            try {
+                const response = await fetchWithRetry(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            generationConfig: { responseMimeType: "application/json" }
+                        })
+                    }
+                );
+
+                const translatedText = response.candidates?.[0]?.content?.parts?.[0]?.text;
+                return JSON.parse(translatedText);
+            } catch (error) {
+                console.error("AI Translation failed:", error);
+                alert("번역에 실패했습니다. 기본 언어로 표시합니다.");
+                return baseQuizData;
+            } finally {
+                loadingEl.classList.add('hidden');
+            }
+        }
+
+        function applyUI() {
+            const ui = currentLangSet.ui;
+            document.querySelectorAll('[data-quiz-lang]').forEach(el => {
+                const key = el.getAttribute('data-quiz-lang');
+                if (ui[key]) el.innerHTML = ui[key];
+            });
+            document.getElementById('loading-msg').innerText = ui.loading || "AI가 번역 중...";
+        }
+
         function render() {
-            const data = quizList[currentIdx];
+            const data = currentLangSet.data[currentIdx];
             document.getElementById('q-num').innerText = currentIdx + 1;
-            document.getElementById('q-total').innerText = quizList.length;
-            document.getElementById('q-progress').style.width = ((currentIdx + 1) / quizList.length * 100) + '%';
+            document.getElementById('q-total').innerText = currentLangSet.data.length;
+            document.getElementById('q-progress').style.width = ((currentIdx + 1) / currentLangSet.data.length * 100) + '%';
             document.getElementById('quiz-cat').innerText = data.cat;
             document.getElementById('q-text').innerText = data.q;
 
@@ -92,14 +162,14 @@
             data.opts.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = "w-full bg-white border border-slate-100 py-4 px-6 rounded-2xl text-left font-bold text-slate-700 shadow-sm active:bg-indigo-50 active:border-indigo-200 transition-all flex items-center";
-                btn.innerHTML = `<span class="w-8 h-8 flex items-center justify-center bg-slate-50 rounded-lg text-xs mr-4 text-slate-400">${String.fromCharCode(65 + i)}</span> ${opt}`;
+                btn.innerHTML = `<span class="w-8 h-8 flex items-center justify-center bg-slate-50 rounded-lg text-xs mr-4 text-slate-400 font-black">${String.fromCharCode(65 + i)}</span> ${opt}`;
                 btn.onclick = () => select(i);
                 optionsBox.appendChild(btn);
             });
         }
 
         function select(idx) {
-            const correct = quizList[currentIdx].ans;
+            const correct = currentLangSet.data[currentIdx].ans;
             const feedback = document.getElementById('q-feedback');
             const icon = document.getElementById('q-feedback-icon');
 
@@ -110,11 +180,11 @@
                 icon.innerText = "❌";
             }
 
-            feedback.classList.replace('opacity-0', 'opacity-100');
+            feedback.style.opacity = '1';
 
             setTimeout(() => {
-                feedback.classList.replace('opacity-100', 'opacity-0');
-                if (currentIdx < quizList.length - 1) {
+                feedback.style.opacity = '0';
+                if (currentIdx < currentLangSet.data.length - 1) {
                     currentIdx++;
                     render();
                 } else {
@@ -124,21 +194,20 @@
         }
 
         function finish() {
-            document.getElementById('res-count').innerText = `${score} / ${quizList.length}`;
+            document.getElementById('res-count').innerText = `${score} / ${currentLangSet.data.length}`;
             document.getElementById('res-points').innerText = `+${score * 100}P`;
             document.getElementById('q-result').classList.remove('hidden');
         }
 
         window.handleQuizReward = function(type) {
-            if (type === 'ad') {
-                alert("광고를 시청합니다... 보상이 2배로 적립되었습니다! (+" + (score * 200) + "P)");
-            } else {
-                alert("기본 보상이 적립되었습니다. (+" + (score * 100) + "P)");
-            }
-            if(window.goHome) window.goHome(); // 메인 index.html의 함수 호출
+            const ui = currentLangSet.ui;
+            alert(type === 'ad' ? ui.alertAd : ui.alertNormal);
+            if(window.goHome) window.goHome();
         };
 
-        // 초기 실행
+        // 초기 시작 로직
+        currentLangSet = await translateWithAI(lang);
+        applyUI();
         render();
     })();
 </script>
