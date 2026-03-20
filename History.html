@@ -1,261 +1,211 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quest-K History</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .pb-safe { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
-        .gradient-text {
-            background: linear-gradient(to right, #4f46e5, #9333ea);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        /* 통일된 카드 스타일 */
-        .history-card {
-            background: white;
-            border-radius: 2rem;
-            padding: 1.25rem;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-            transition: all 0.2s;
-        }
-        .history-card:active { transform: scale(0.98); }
+<div class="p-6 pb-24 animate-[fadeIn_0.4s_ease-out]">
+    <!-- 상단 요약 정보 (이용 시간 및 총 경험치) -->
+    <section class="mb-8">
+        <h2 class="text-2xl font-black text-slate-900 mb-4 flex items-center gap-2">
+            <span class="w-1.5 h-6 bg-indigo-600 rounded-full"></span>
+            <span data-lang="history-title">나의 여행 기록</span>
+        </h2>
         
-        /* 공통 상단바 스타일 */
-        .lang-container { position: relative; display: inline-block; }
-        .lang-btn {
-            background: #f1f5f9;
-            padding: 0.4rem 0.8rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #475569;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            border: 1px solid #e2e8f0;
-        }
-        .lang-dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: calc(100% + 8px);
-            background: white;
-            min-width: 140px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            border-radius: 16px;
-            overflow: hidden;
-            z-index: 100;
-            border: 1px solid #f1f5f9;
-        }
-        .lang-dropdown.show { display: block; }
-        .lang-option {
-            padding: 0.8rem 1rem;
-            font-size: 0.875rem;
-            color: #475569;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .lang-option:hover { background: #f8fafc; }
-        .lang-option.active {
-            color: #4f46e5;
-            font-weight: bold;
-            background: #eef2ff;
-        }
-        
-        /* 하단바 스타일 통일 */
-        .nav-item { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            font-size: 0.7rem; 
-            color: #94a3b8; 
-            font-weight: 600; 
-            transition: all 0.2s;
-        }
-        .nav-item.active { color: #4f46e5; }
-        .nav-item:active { transform: scale(0.9); }
-    </style>
-</head>
-<body class="bg-[#f8fafc] text-slate-900">
-
-    <div class="max-w-2xl mx-auto min-h-screen pb-safe">
-        
-        <!-- [고정 상단바] 뒤로가기 버튼 삭제 및 Index.html과 완전 통일 -->
-        <header class="bg-white/90 backdrop-blur-md px-5 py-3 flex justify-between items-center sticky top-0 z-[100] border-b border-slate-100">
-            <div class="flex items-center">
-                <h1 class="text-2xl font-black gradient-text tracking-tighter cursor-pointer" onclick="location.href='Index.html'">Quest-K</h1>
+        <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col gap-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest" data-lang="play-time-label">총 여행 시간</p>
+                    <p class="text-2xl font-black text-slate-800">12h 45m</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest" data-lang="xp-reward-label">보너스 경험치</p>
+                    <p class="text-2xl font-black text-indigo-600">+120 XP</p>
+                </div>
             </div>
-            
-            <div class="flex items-center gap-2">
-                <div class="lang-container">
-                    <button class="lang-btn shadow-sm" onclick="toggleLangDropdown(event)">
-                        <span class="text-blue-500">🌐</span>
-                        <span id="currentLangDisplay">KO</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
-                    <div id="langDropdown" class="lang-dropdown">
-                        <div class="lang-option" data-lang="KO" onclick="changeLanguage('KO')"><span>🇰🇷</span> 한국어</div>
-                        <div class="lang-option" data-lang="EN" onclick="changeLanguage('EN')"><span>🇺🇸</span> English</div>
-                        <div class="lang-option" data-lang="JP" onclick="changeLanguage('JP')"><span>🇯🇵</span> 日本語</div>
-                    </div>
-                </div>
-                <!-- 알림 및 프로필 아이콘 (Index와 동일하게 유지) -->
-                <button class="p-2 text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg></button>
-                <button class="p-2 text-slate-400"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></button>
+            <!-- 경험치 게이지 -->
+            <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div class="h-full bg-indigo-500 rounded-full" style="width: 75%"></div>
             </div>
-        </header>
+            <p class="text-[10px] text-slate-400 text-center font-medium" data-lang="time-info">1시간 이용 시마다 10 XP가 자동으로 지급됩니다.</p>
+        </div>
+    </section>
 
-        <!-- Journey Summary Section -->
-        <main class="px-5 py-8">
-            <h2 id="txt-history-title" class="text-2xl font-black text-slate-900 mb-6 italic">My Journey</h2>
-
-            <!-- Overall Stats Card -->
-            <div class="bg-indigo-600 rounded-[2.5rem] p-6 text-white mb-8 shadow-xl shadow-indigo-100 relative overflow-hidden">
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <p id="txt-overall-progress" class="text-indigo-100 text-[10px] font-bold uppercase tracking-widest">전체 진행률</p>
-                            <h3 class="text-4xl font-black mt-1">32<span class="text-lg ml-1 opacity-60">%</span></h3>
-                        </div>
-                        <div class="bg-white/20 p-3 rounded-2xl text-xl">📊</div>
-                    </div>
-                    <div class="w-full h-2 bg-white/20 rounded-full overflow-hidden mb-2">
-                        <div class="h-full bg-white w-1/3 transition-all duration-1000"></div>
-                    </div>
-                    <p id="txt-overall-desc" class="text-[10px] text-indigo-100 font-medium">총 25개의 미션 중 8개를 완료했습니다.</p>
-                </div>
-                <div class="absolute right-[-10%] bottom-[-20%] w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+    <!-- 미션 완료 현황 (빙고 스타일) -->
+    <section class="mb-8">
+        <div class="flex justify-between items-end mb-4">
+            <h3 class="text-lg font-black text-slate-900" data-lang="bingo-title">미션 달성 빙고</h3>
+            <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">2 Lines Clear!</span>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+            <!-- 빙고 아이템들 (샘플) -->
+            <div class="aspect-square bg-indigo-600 rounded-2xl flex items-center justify-center text-xl shadow-md border-2 border-indigo-200 relative group cursor-pointer" onclick="showMissionDetail('K-BBQ Master', '2024.05.12 19:30')">
+                <span>🍖</span>
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-white"></div>
             </div>
+            <div class="aspect-square bg-indigo-600 rounded-2xl flex items-center justify-center text-xl shadow-md border-2 border-indigo-200 relative">
+                <span>🎤</span>
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-white"></div>
+            </div>
+            <div class="aspect-square bg-slate-100 rounded-2xl flex items-center justify-center text-xl grayscale opacity-50 border border-dashed border-slate-300">
+                <span>📸</span>
+            </div>
+            <div class="aspect-square bg-indigo-600 rounded-2xl flex items-center justify-center text-xl shadow-md border-2 border-indigo-200 relative">
+                <span>🏙️</span>
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-white"></div>
+            </div>
+            <!-- 추가 칸들... -->
+            <div class="aspect-square bg-slate-100 rounded-2xl flex items-center justify-center text-xl grayscale opacity-50 border border-dashed border-slate-300"><span>🚴</span></div>
+            <div class="aspect-square bg-indigo-600 rounded-2xl flex items-center justify-center text-xl shadow-md border-2 border-indigo-200 relative"><span>🥘</span></div>
+            <div class="aspect-square bg-slate-100 rounded-2xl flex items-center justify-center text-xl grayscale opacity-50 border border-dashed border-slate-300"><span>⛩️</span></div>
+            <div class="aspect-square bg-slate-100 rounded-2xl flex items-center justify-center text-xl grayscale opacity-50 border border-dashed border-slate-300"><span>🛍️</span></div>
+        </div>
+        <p class="mt-3 text-[10px] text-slate-400 font-medium text-center" data-lang="bingo-desc">미션을 완료하여 빙고판을 채우고 추가 보상을 획득하세요!</p>
+    </section>
 
-            <!-- Wishlist -->
-            <section class="mb-10">
-                <h3 id="txt-wishlist-title" class="text-base font-black text-slate-900 mb-4 flex items-center gap-2">❤️ 찜한 리스트</h3>
-                <div class="history-card">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-xl">🏯</div>
-                        <div class="flex-1">
-                            <div class="text-sm font-bold text-slate-800">경복궁 한복 인생샷</div>
-                            <div class="text-[10px] font-bold text-slate-400 mt-0.5">SEOUL · 버킷리스트</div>
-                        </div>
-                        <button class="p-2 text-rose-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3c1.74 0 3.285.834 4.312 2.105C13.03 3.834 14.575 3 16.312 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" /></svg>
-                        </button>
-                    </div>
+    <!-- 탭 메뉴 (찜 리스트 / 경험치 이력) -->
+    <section>
+        <div class="flex border-b border-slate-100 mb-4">
+            <button id="tab-wish" onclick="switchHistoryTab('wish')" class="flex-1 py-3 text-sm font-black text-indigo-600 border-b-2 border-indigo-600 transition-all" data-lang="tab-wish">찜 리스트</button>
+            <button id="tab-xp" onclick="switchHistoryTab('xp')" class="flex-1 py-3 text-sm font-bold text-slate-400 border-b-2 border-transparent transition-all" data-lang="tab-xp">경험치 이력</button>
+        </div>
+
+        <!-- 찜 리스트 내용 -->
+        <div id="content-wish" class="space-y-3">
+            <div class="bg-white p-4 rounded-2xl border border-slate-50 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-xl">🏙️</div>
+                <div class="flex-1">
+                    <p class="text-sm font-black text-slate-800">N Seoul Tower Photo Zone</p>
+                    <p class="text-[10px] text-slate-400 font-bold">Seoul · Photozone</p>
                 </div>
-            </section>
-
-            <!-- Completed History -->
-            <section>
-                <h3 id="txt-completed-title" class="text-base font-black text-slate-900 mb-4 flex items-center gap-2">✅ 완료 기록</h3>
-                <div class="space-y-3">
-                    <div class="history-card border-l-4 border-l-green-500">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center text-xl font-bold">✔️</div>
-                            <div class="flex-1">
-                                <h4 class="text-sm font-bold text-slate-800">광장시장 빈대떡 먹기</h4>
-                                <p class="text-[10px] text-green-600 font-bold uppercase tracking-tight mt-0.5"><span id="txt-completed-date">완료일</span>: 2024-03-15</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="history-card border-l-4 border-l-green-500">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center text-xl font-bold">✔️</div>
-                            <div class="flex-1">
-                                <h4 class="text-sm font-bold text-slate-800">덕수궁 돌담길 산책</h4>
-                                <p class="text-[10px] text-green-600 font-bold uppercase tracking-tight mt-0.5"><span id="txt-completed-date2">완료일</span>: 2024-03-10</p>
-                            </div>
-                        </div>
-                    </div>
+                <button class="text-red-400 p-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-50 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-xl">🚴</div>
+                <div class="flex-1">
+                    <p class="text-sm font-black text-slate-800">Han River Bike Tour</p>
+                    <p class="text-[10px] text-slate-400 font-bold">Seoul · Activity</p>
                 </div>
-            </section>
-        </main>
+                <button class="text-red-400 p-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+            </div>
+        </div>
 
-        <!-- [고정 하단바] Index.html 양식과 아이콘 완벽 통일 -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/80 backdrop-blur-2xl border-t border-slate-100 px-10 py-4 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.04)]">
-            <button class="nav-item" onclick="location.href='Index.html'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-                <span id="nav-home">홈</span>
-            </button>
-            <button class="nav-item" onclick="location.href='Mission.html'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                <span id="nav-mission">미션</span>
-            </button>
-            <button class="nav-item" onclick="location.href='Rank.html'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-                <span id="nav-rank">랭킹</span>
-            </button>
-            <button class="nav-item active">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                <span id="nav-record">기록</span>
-            </button>
-        </nav>
+        <!-- 경험치 이력 내용 (숨김 처리) -->
+        <div id="content-xp" class="hidden space-y-2">
+            <div class="flex justify-between items-center p-4 bg-white rounded-2xl border border-slate-50">
+                <div>
+                    <p class="text-xs font-black text-slate-800" data-lang="xp-item1">앱 이용 시간 보상 (12h)</p>
+                    <p class="text-[9px] text-slate-400 font-bold">2024.05.20 14:00</p>
+                </div>
+                <p class="text-sm font-black text-indigo-600">+10 XP</p>
+            </div>
+            <div class="flex justify-between items-center p-4 bg-white rounded-2xl border border-slate-50">
+                <div>
+                    <p class="text-xs font-black text-slate-800" data-lang="xp-item2">미션 완료: K-BBQ Master</p>
+                    <p class="text-[9px] text-slate-400 font-bold">2024.05.12 19:30</p>
+                </div>
+                <p class="text-sm font-black text-indigo-600">+50 XP</p>
+            </div>
+            <div class="flex justify-between items-center p-4 bg-white rounded-2xl border border-slate-50">
+                <div>
+                    <p class="text-xs font-black text-slate-800" data-lang="xp-item3">데일리 퀴즈 정답</p>
+                    <p class="text-[9px] text-slate-400 font-bold">2024.05.11 09:15</p>
+                </div>
+                <p class="text-sm font-black text-indigo-600">+5 XP</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- 상세 내역 모달 (미션 클릭 시) -->
+<div id="mission-modal" class="fixed inset-0 z-[200] flex items-center justify-center p-6 hidden">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeMissionModal()"></div>
+    <div class="bg-white rounded-[2.5rem] w-full max-w-sm p-8 z-10 animate-[fadeIn_0.3s_ease-out] text-center">
+        <div id="modal-icon" class="text-5xl mb-4">🍖</div>
+        <h4 id="modal-title" class="text-xl font-black text-slate-900 mb-2">K-BBQ Master</h4>
+        <p class="text-slate-400 text-sm mb-6" data-lang="modal-desc">축하합니다! 미션을 성공적으로 완료했습니다.</p>
+        <div class="bg-slate-50 rounded-2xl p-4 mb-8">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1" data-lang="modal-date-label">완료 일시</p>
+            <p id="modal-date" class="text-sm font-black text-slate-700">2024.05.12 19:30</p>
+        </div>
+        <button onclick="closeMissionModal()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-sm active:scale-95 transition-all" data-lang="modal-close">확인</button>
     </div>
+</div>
 
-    <script>
-        const translations = {
-            'KO': { 
-                'history-title': 'My Journey',
-                'overall-progress': '전체 진행률',
-                'overall-desc': '총 25개의 미션 중 8개를 완료했습니다.',
-                'wishlist-title': '❤️ 찜한 리스트',
-                'completed-title': '✅ 완료 기록',
-                'completed-date': '완료일',
-                'completed-date2': '완료일',
-                'nav-home': '홈', 'nav-mission': '미션', 'nav-rank': '랭킹', 'nav-record': '기록'
-            },
-            'EN': { 
-                'history-title': 'My Journey',
-                'overall-progress': 'Overall Progress',
-                'overall-desc': 'Completed 8 out of 25 missions.',
-                'wishlist-title': '❤️ Wishlist',
-                'completed-title': '✅ Completed',
-                'completed-date': 'Completed',
-                'completed-date2': 'Completed',
-                'nav-home': 'Home', 'nav-mission': 'Mission', 'nav-rank': 'Ranking', 'nav-record': 'Record'
-            },
-            'JP': { 
-                'history-title': 'My Journey',
-                'overall-progress': '全体進捗',
-                'overall-desc': '全25個のミッションのうち8個を完了しました。',
-                'wishlist-title': '❤️ お気に入り',
-                'completed-title': '✅ 完了記録',
-                'completed-date': '完了日',
-                'completed-date2': '完了일',
-                'nav-home': 'ホーム', 'nav-mission': 'ミッション', 'nav-rank': 'ランキング', 'nav-record': '記録'
-            }
-        };
-
-        function toggleLangDropdown(e) { 
-            e.stopPropagation(); 
-            document.getElementById('langDropdown').classList.toggle('show'); 
+<script>
+    // 번역 데이터 확장
+    const historyI18n = {
+        KO: {
+            "history-title": "나의 여행 기록", "play-time-label": "총 여행 시간", "xp-reward-label": "보너스 경험치",
+            "time-info": "1시간 이용 시마다 10 XP가 자동으로 지급됩니다.", "bingo-title": "미션 달성 빙고",
+            "bingo-desc": "미션을 완료하여 빙고판을 채우고 추가 보상을 획득하세요!",
+            "tab-wish": "찜 리스트", "tab-xp": "경험치 이력",
+            "xp-item1": "앱 이용 시간 보상 (12h)", "xp-item2": "미션 완료: K-BBQ Master", "xp-item3": "데일리 퀴즈 정답",
+            "modal-desc": "축하합니다! 미션을 성공적으로 완료했습니다.", "modal-date-label": "완료 일시", "modal-close": "확인"
+        },
+        EN: {
+            "history-title": "My History", "play-time-label": "Total Travel Time", "xp-reward-label": "Bonus XP",
+            "time-info": "Earn 10 XP for every hour spent in the app.", "bingo-title": "Mission Bingo",
+            "bingo-desc": "Complete missions to fill the board and get rewards!",
+            "tab-wish": "Wishlist", "tab-xp": "XP History",
+            "xp-item1": "App Usage Reward (12h)", "xp-item2": "Mission Done: K-BBQ Master", "xp-item3": "Daily Quiz Correct",
+            "modal-desc": "Congratulations! Mission completed successfully.", "modal-date-label": "Completion Date", "modal-close": "Close"
+        },
+        JP: {
+            "history-title": "旅行の記録", "play-time-label": "総利用時間", "xp-reward-label": "ボーナス経験値",
+            "time-info": "1時間の利用ごとに10 XPが自動的に付与されます。", "bingo-title": "ミッションビンゴ",
+            "bingo-desc": "ミッションをクリアしてビンゴを埋め、報酬を獲得しましょう！",
+            "tab-wish": "お気に入り", "tab-xp": "経験値履歴",
+            "xp-item1": "アプリ利用報酬 (12h)", "xp-item2": "ミッション完了: K-BBQ Master", "xp-item3": "デイリークイズ正解",
+            "modal-desc": "おめでとうございます！ミッションを完了しました。", "modal-date-label": "完了日時", "modal-close": "確認"
         }
+    };
 
-        function changeLanguage(lang) {
-            const display = document.getElementById('currentLangDisplay');
-            if (display) display.innerText = lang;
-            
-            const data = translations[lang];
-            Object.keys(data).forEach(key => {
-                const el = document.getElementById('txt-' + key) || document.getElementById(key);
-                if (el) el.innerText = data[key];
-            });
-            document.querySelectorAll('.lang-option').forEach(opt => opt.classList.toggle('active', opt.dataset.lang === lang));
-            document.getElementById('langDropdown').classList.remove('show');
-            localStorage.setItem('selectedLang', lang);
+    function switchHistoryTab(tab) {
+        const wishBtn = document.getElementById('tab-wish');
+        const xpBtn = document.getElementById('tab-xp');
+        const wishContent = document.getElementById('content-wish');
+        const xpContent = document.getElementById('content-xp');
+
+        if (tab === 'wish') {
+            wishBtn.classList.add('text-indigo-600', 'border-indigo-600');
+            wishBtn.classList.remove('text-slate-400', 'border-transparent');
+            xpBtn.classList.add('text-slate-400', 'border-transparent');
+            xpBtn.classList.remove('text-indigo-600', 'border-indigo-600');
+            wishContent.classList.remove('hidden');
+            xpContent.classList.add('hidden');
+        } else {
+            xpBtn.classList.add('text-indigo-600', 'border-indigo-600');
+            xpBtn.classList.remove('text-slate-400', 'border-transparent');
+            wishBtn.classList.add('text-slate-400', 'border-transparent');
+            wishBtn.classList.remove('text-indigo-600', 'border-indigo-600');
+            xpContent.classList.remove('hidden');
+            wishContent.classList.add('hidden');
         }
+    }
 
-        window.onclick = () => {
-            const dropdown = document.getElementById('langDropdown');
-            if (dropdown) dropdown.classList.remove('show');
-        };
-        
-        window.onload = () => changeLanguage(localStorage.getItem('selectedLang') || 'KO');
-    </script>
-</body>
-</html>
+    function showMissionDetail(title, date) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-date').innerText = date;
+        document.getElementById('mission-modal').classList.remove('hidden');
+    }
+
+    function closeMissionModal() {
+        document.getElementById('mission-modal').classList.add('hidden');
+    }
+
+    // 언어 변경 감지 및 적용
+    window.addEventListener('languageChanged', (e) => {
+        const lang = e.detail;
+        const dict = historyI18n[lang];
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.getAttribute('data-lang');
+            if (dict[key]) el.innerHTML = dict[key];
+        });
+    });
+
+    // 초기 언어 설정
+    (function init() {
+        const currentLang = localStorage.getItem('selectedLang') || 'KO';
+        const dict = historyI18n[currentLang];
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.getAttribute('data-lang');
+            if (dict[key]) el.innerHTML = dict[key];
+        });
+    })();
+</script>
+
