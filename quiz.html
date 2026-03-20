@@ -1,214 +1,220 @@
 <div id="quiz-app-container" class="px-5 py-6 animate-[fadeIn_0.3s_ease-out] min-h-screen bg-slate-50 relative">
-    <!-- 로딩 인디케이터 -->
-    <div id="ai-loading" class="hidden absolute inset-0 bg-white/80 backdrop-blur-md z-[200] flex flex-col items-center justify-center">
-        <div class="loader mb-4"></div>
-        <p class="text-indigo-600 font-bold animate-pulse" id="loading-msg">AI가 퀴즈를 번역 중입니다...</p>
+    <!-- AI Translation Overlay -->
+    <div id="ai-loading" class="hidden absolute inset-0 bg-white/90 backdrop-blur-md z-[200] flex flex-col items-center justify-center">
+        <div class="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-indigo-600 font-black animate-pulse text-sm" id="loading-msg">AI is optimizing the quiz for you...</p>
     </div>
 
-    <!-- Quiz Header -->
+    <!-- Header Section -->
     <div class="flex justify-between items-end mb-6">
         <div>
-            <span id="quiz-cat" class="bg-indigo-100 text-indigo-600 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-wider">Loading...</span>
-            <h2 class="text-2xl font-black text-slate-900 mt-1" data-quiz-lang="title">Daily Quiz</h2>
+            <span id="quiz-cat" class="bg-indigo-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">K-Culture</span>
+            <h2 class="text-2xl font-black text-slate-900 mt-2 tracking-tight" data-quiz-lang="title">Daily Quiz</h2>
         </div>
         <div class="text-right">
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest" data-quiz-lang="q-label">Question</p>
-            <p class="text-xl font-black text-indigo-600"><span id="q-num">1</span><span class="text-slate-300 mx-1">/</span><span id="q-total">5</span></p>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5" data-quiz-lang="q-label">Question</p>
+            <p class="text-xl font-black text-indigo-600 leading-none"><span id="q-num">1</span><span class="text-slate-300 mx-1">/</span><span id="q-total">5</span></p>
         </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="w-full h-2 bg-slate-200 rounded-full mb-8 overflow-hidden">
-        <div id="q-progress" class="h-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-all duration-500" style="width: 20%"></div>
+    <!-- Progress Tracker -->
+    <div class="w-full h-2.5 bg-slate-200 rounded-full mb-8 overflow-hidden shadow-inner">
+        <div id="q-progress" class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 transition-all duration-700 ease-out" style="width: 0%"></div>
     </div>
 
-    <!-- Question Card -->
-    <div id="q-card" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-6 min-h-[220px] flex items-center justify-center relative overflow-hidden">
-        <p id="q-text" class="text-lg font-bold text-slate-800 text-center leading-relaxed">
-            Loading...
+    <!-- Quiz Card -->
+    <div id="q-card" class="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 mb-8 min-h-[260px] flex items-center justify-center relative overflow-hidden transition-all">
+        <p id="q-text" class="text-xl font-bold text-slate-800 text-center leading-relaxed antialiased">
+            Preparing your mission...
         </p>
-        <div id="q-feedback" class="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
-            <span id="q-feedback-icon" class="text-7xl"></span>
+        
+        <!-- Flash Feedback -->
+        <div id="q-feedback" class="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 transform scale-110">
+            <span id="q-feedback-icon" class="text-8xl drop-shadow-2xl"></span>
         </div>
     </div>
 
-    <!-- Options -->
-    <div id="q-options" class="grid grid-cols-1 gap-3 mb-10"></div>
+    <!-- Option Selection -->
+    <div id="q-options" class="grid grid-cols-1 gap-4 mb-12">
+        <!-- Buttons injected by JS -->
+    </div>
 
-    <!-- Result Screen -->
-    <div id="q-result" class="hidden fixed inset-0 bg-white z-[150] flex flex-col items-center justify-center p-8 text-center">
-        <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mb-6 animate-bounce">
-            <span class="text-5xl">🎁</span>
+    <!-- Result Dashboard -->
+    <div id="q-result" class="hidden fixed inset-0 bg-white z-[150] flex flex-col items-center justify-center p-8 text-center animate-[fadeIn_0.5s_ease-out]">
+        <div class="relative mb-8">
+            <div class="absolute inset-0 bg-yellow-400 blur-3xl opacity-20 animate-pulse"></div>
+            <span class="text-7xl relative">🏆</span>
         </div>
-        <h3 class="text-3xl font-black text-slate-900 mb-2" data-quiz-lang="res-title">Excellent!</h3>
-        <p class="text-slate-500 mb-8 font-medium" data-quiz-lang="res-sub">You've become a Korea expert!</p>
+        <h3 class="text-3xl font-black text-slate-900 mb-3" data-quiz-lang="res-title">Perfect Mission!</h3>
+        <p class="text-slate-500 mb-10 font-medium leading-relaxed" data-quiz-lang="res-sub">You've mastered the essential Korean travel knowledge.</p>
         
-        <div class="w-full bg-slate-50 rounded-[2rem] p-6 mb-10 border border-slate-100">
-            <div class="flex justify-between items-center px-4">
-                <div class="text-left">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-quiz-lang="res-correct">Correct</p>
-                    <p id="res-count" class="text-2xl font-black text-slate-800">0/5</p>
+        <div class="w-full max-w-sm bg-slate-50 rounded-[2.5rem] p-8 mb-10 border border-slate-100 shadow-sm">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-center border-r border-slate-200">
+                    <p class="text-[11px] text-slate-400 font-bold uppercase mb-1" data-quiz-lang="res-correct">Score</p>
+                    <p id="res-count" class="text-3xl font-black text-slate-800">0 / 5</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase" data-quiz-lang="res-reward">Reward</p>
-                    <p id="res-points" class="text-2xl font-black text-indigo-600">+0P</p>
+                <div class="text-center">
+                    <p class="text-[11px] text-slate-400 font-bold uppercase mb-1" data-quiz-lang="res-reward">Points</p>
+                    <p id="res-points" class="text-3xl font-black text-indigo-600">+0P</p>
                 </div>
             </div>
         </div>
 
-        <div class="w-full space-y-3">
-            <button onclick="handleQuizReward('ad')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-xl flex items-center justify-center gap-2 active:scale-95 transition-transform">
-                <span data-quiz-lang="btn-ad">📺 Watch AD for 2x Points</span>
-            </button>
-            <button onclick="handleQuizReward('normal')" class="w-full bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold active:scale-95 transition-transform">
-                <span data-quiz-lang="btn-normal">Claim Reward</span>
-            </button>
-        </div>
+        <button onclick="if(window.goHome) window.goHome()" class="w-full max-w-sm bg-slate-900 text-white py-5 rounded-2xl font-bold text-lg shadow-2xl shadow-slate-300 active:scale-95 transition-all" data-quiz-lang="btn-close">
+            Confirm & Return
+        </button>
     </div>
 </div>
 
 <script>
-    (async function() {
-        const apiKey = ""; // API Key는 환경에서 자동 제공됨
-        const lang = localStorage.getItem('selectedLang') || 'KO';
+    (function() {
+        const apiKey = ""; 
+        const translationCache = new Map();
         
-        // 원본 한국어 데이터
-        const baseQuizData = {
+        const baseContent = {
             ui: {
-                title: "오늘의 퀴즈", qLabel: "질문", resTitle: "대단해요!", resSub: "한국 문화 박사가 되셨네요!<br>보상을 확인하세요.",
-                resCorrect: "정답 수", resReward: "보상", btnAd: "📺 광고 보고 포인트 2배", btnNormal: "일반 보상 수령",
-                alertAd: "광고 시청 완료! 보상이 2배로 적립되었습니다.", alertNormal: "보상이 적립되었습니다.",
-                loading: "AI가 퀴즈를 번역 중입니다..."
+                title: "미션 마스터 퀴즈", qLabel: "질문", resTitle: "미션 완료!", resSub: "한국 여행 전문가로 인정받으셨습니다!",
+                resCorrect: "맞힌 개수", resReward: "획득 포인트", btnClose: "확인 및 돌아가기", loading: "AI가 당신을 위해 퀴즈를 준비 중입니다..."
             },
             data: [
-                { cat: '음식', q: "삼겹살을 먹은 뒤 남은 양념에 밥을 볶아 먹는 것은?", opts: ["비빔밥", "볶음밥", "덮밥", "주먹밥"], ans: 1 },
-                { cat: '라이프', q: "편의점에서 얼음컵에 부어 마시는 음료 형태는?", opts: ["캔", "병", "파우치", "직접제조"], ans: 2 },
-                { cat: '액티비티', q: "한강의 공공 자전거 이름은?", opts: ["따릉이", "타슈", "누비자", "어울링"], ans: 0 },
-                { cat: '음악', q: "BTS의 공식 팬클럽 이름은?", opts: ["Blink", "Army", "Once", "Reveluv"], ans: 1 },
-                { cat: '포토', q: "한복 착용 시 무료 입장이 가능한 궁궐은?", opts: ["덕수궁", "창덕궁", "경복궁", "창경궁"], ans: 2 }
+                { cat: '음식', q: "삼겹살을 먹은 후 밥을 볶아 먹는 문화를 무엇이라 할까요?", opts: ["비빔밥", "볶음밥", "덮밥", "주먹밥"], ans: 1 },
+                { cat: 'K-라이프', q: "양머리 수건을 쓰고 식혜와 맥반석 달걀을 즐기는 이곳은?", opts: ["노래방", "PC방", "찜질방", "미용실"], ans: 2 },
+                { cat: '음악', q: "방탄소년단(BTS)의 명소를 찾아다니는 여행 문화를 무엇이라 하나요?", opts: ["방탄 투어", "K팝 순례", "아이돌 캠프", "뮤직 로드"], ans: 0 },
+                { cat: '포토존', q: "한복을 입으면 입장료가 면제되는 서울의 대표 궁궐은?", opts: ["경복궁", "남산타워", "롯데월드", "코엑스"], ans: 0 },
+                { cat: '액티비티', q: "서울 한강에서 쉽게 빌려 탈 수 있는 공공자전거의 이름은?", opts: ["씽씽이", "따릉이", "타슈", "어울링"], ans: 1 }
             ]
         };
 
-        let currentLangSet = baseQuizData;
+        let currentData = null;
         let currentIdx = 0;
         let score = 0;
 
-        // Gemini AI 번역 함수 (지수 백오프 포함)
-        async function translateWithAI(targetLang) {
-            if (targetLang === 'KO') return baseQuizData;
+        async function startApp() {
+            const targetLang = localStorage.getItem('selectedLang') || 'KO';
             
-            const loadingEl = document.getElementById('ai-loading');
-            loadingEl.classList.remove('hidden');
+            // 1. Check cache first
+            if (targetLang === 'KO') {
+                currentData = baseContent;
+            } else if (translationCache.has(targetLang)) {
+                currentData = translationCache.get(targetLang);
+            } else {
+                currentData = await fetchTranslation(targetLang);
+                translationCache.set(targetLang, currentData);
+            }
 
-            const prompt = `Translate the following JSON object into ${targetLang}. Keep the structure exactly the same. Only return the JSON. 
-            Object: ${JSON.stringify(baseQuizData)}`;
+            applyLayout();
+            renderStep();
+        }
 
-            const fetchWithRetry = async (url, options, retries = 5, backoff = 1000) => {
-                try {
-                    const res = await fetch(url, options);
-                    if (!res.ok) throw new Error('API Error');
-                    return await res.json();
-                } catch (err) {
-                    if (retries <= 0) throw err;
-                    await new Promise(resolve => setTimeout(resolve, backoff));
-                    return fetchWithRetry(url, options, retries - 1, backoff * 2);
-                }
-            };
+        async function fetchTranslation(lang) {
+            const loader = document.getElementById('ai-loading');
+            loader.classList.remove('hidden');
+            
+            const prompt = `You are a professional translator. Translate this Korean Travel Mission Quiz JSON into ${lang}. 
+            Maintain the exact JSON structure. Do not change the 'ans' (index) values.
+            JSON: ${JSON.stringify(baseContent)}`;
 
             try {
-                const response = await fetchWithRetry(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: prompt }] }],
-                            generationConfig: { responseMimeType: "application/json" }
-                        })
-                    }
-                );
-
-                const translatedText = response.candidates?.[0]?.content?.parts?.[0]?.text;
-                return JSON.parse(translatedText);
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+                const result = await response.json();
+                return JSON.parse(result.candidates[0].content.parts[0].text);
             } catch (error) {
-                console.error("AI Translation failed:", error);
-                alert("번역에 실패했습니다. 기본 언어로 표시합니다.");
-                return baseQuizData;
+                console.error("AI Translation Error:", error);
+                return baseContent; // Fallback to Korean
             } finally {
-                loadingEl.classList.add('hidden');
+                loader.classList.add('hidden');
             }
         }
 
-        function applyUI() {
-            const ui = currentLangSet.ui;
+        function applyLayout() {
+            const ui = currentData.ui;
             document.querySelectorAll('[data-quiz-lang]').forEach(el => {
                 const key = el.getAttribute('data-quiz-lang');
                 if (ui[key]) el.innerHTML = ui[key];
             });
-            document.getElementById('loading-msg').innerText = ui.loading || "AI가 번역 중...";
+            document.getElementById('loading-msg').innerText = ui.loading;
         }
 
-        function render() {
-            const data = currentLangSet.data[currentIdx];
-            document.getElementById('q-num').innerText = currentIdx + 1;
-            document.getElementById('q-total').innerText = currentLangSet.data.length;
-            document.getElementById('q-progress').style.width = ((currentIdx + 1) / currentLangSet.data.length * 100) + '%';
-            document.getElementById('quiz-cat').innerText = data.cat;
-            document.getElementById('q-text').innerText = data.q;
+        function renderStep() {
+            const item = currentData.data[currentIdx];
+            const qNum = currentIdx + 1;
+            const total = currentData.data.length;
 
-            const optionsBox = document.getElementById('q-options');
-            optionsBox.innerHTML = '';
+            document.getElementById('q-num').innerText = qNum;
+            document.getElementById('q-total').innerText = total;
+            document.getElementById('q-progress').style.width = (qNum / total * 100) + '%';
+            document.getElementById('quiz-cat').innerText = item.cat;
+            document.getElementById('q-text').innerText = item.q;
 
-            data.opts.forEach((opt, i) => {
+            const container = document.getElementById('q-options');
+            container.innerHTML = '';
+            
+            item.opts.forEach((opt, index) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full bg-white border border-slate-100 py-4 px-6 rounded-2xl text-left font-bold text-slate-700 shadow-sm active:bg-indigo-50 active:border-indigo-200 transition-all flex items-center";
-                btn.innerHTML = `<span class="w-8 h-8 flex items-center justify-center bg-slate-50 rounded-lg text-xs mr-4 text-slate-400 font-black">${String.fromCharCode(65 + i)}</span> ${opt}`;
-                btn.onclick = () => select(i);
-                optionsBox.appendChild(btn);
+                btn.className = "group w-full bg-white border border-slate-200 py-5 px-6 rounded-2xl text-left font-bold text-slate-700 shadow-sm active:scale-[0.98] active:bg-indigo-50 transition-all flex items-center hover:border-indigo-300";
+                btn.innerHTML = `
+                    <span class="w-10 h-10 flex items-center justify-center bg-slate-50 group-hover:bg-indigo-100 rounded-xl text-sm mr-5 text-slate-400 group-hover:text-indigo-600 transition-colors font-black shadow-inner">
+                        ${index + 1}
+                    </span> 
+                    <span class="flex-1">${opt}</span>
+                `;
+                btn.onclick = () => processAnswer(index);
+                container.appendChild(btn);
             });
         }
 
-        function select(idx) {
-            const correct = currentLangSet.data[currentIdx].ans;
+        function processAnswer(idx) {
+            const isCorrect = idx === currentData.data[currentIdx].ans;
+            if (isCorrect) score++;
+
             const feedback = document.getElementById('q-feedback');
             const icon = document.getElementById('q-feedback-icon');
-
-            if (idx === correct) {
-                score++;
-                icon.innerText = "⭕";
-            } else {
-                icon.innerText = "❌";
-            }
-
-            feedback.style.opacity = '1';
+            
+            icon.innerText = isCorrect ? "⭕" : "❌";
+            feedback.classList.replace('opacity-0', 'opacity-100');
+            feedback.classList.replace('scale-110', 'scale-100');
 
             setTimeout(() => {
-                feedback.style.opacity = '0';
-                if (currentIdx < currentLangSet.data.length - 1) {
+                feedback.classList.replace('opacity-100', 'opacity-0');
+                feedback.classList.replace('scale-100', 'scale-110');
+                
+                if (currentIdx < currentData.data.length - 1) {
                     currentIdx++;
-                    render();
+                    renderStep();
                 } else {
-                    finish();
+                    displayFinalResult();
                 }
-            }, 800);
+            }, 900);
         }
 
-        function finish() {
-            document.getElementById('res-count').innerText = `${score} / ${currentLangSet.data.length}`;
+        function displayFinalResult() {
+            document.getElementById('res-count').innerText = `${score} / ${currentData.data.length}`;
             document.getElementById('res-points').innerText = `+${score * 100}P`;
             document.getElementById('q-result').classList.remove('hidden');
         }
 
-        window.handleQuizReward = function(type) {
-            const ui = currentLangSet.ui;
-            alert(type === 'ad' ? ui.alertAd : ui.alertNormal);
-            if(window.goHome) window.goHome();
-        };
+        // Initialize and Listen for language changes
+        startApp();
 
-        // 초기 시작 로직
-        currentLangSet = await translateWithAI(lang);
-        applyUI();
-        render();
+        window.addEventListener('languageChanged', (e) => {
+            currentIdx = 0;
+            score = 0;
+            document.getElementById('q-result').classList.add('hidden');
+            startApp();
+        });
+
+        // Global storage listener for redundancy
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'selectedLang') startApp();
+        });
     })();
 </script>
 
