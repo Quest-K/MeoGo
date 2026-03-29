@@ -3,160 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quest-K MVP</title>
+    <title>Quest-K | Journey of Assets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;700;900&display=swap');
-        body { font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; }
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;900&display=swap');
+        body { font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; letter-spacing: -0.02em; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.4s ease-out; }
         
-        .pb-safe { padding-bottom: calc(9rem + env(safe-area-inset-bottom)); }
-        .gradient-text { background: linear-gradient(to right, #4f46e5, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .pb-safe { padding-bottom: calc(8rem + env(safe-area-inset-bottom)); }
         
-        /* 카테고리 카드 스타일 */
+        /* [컬러 가이드]
+           메인 네이비: #0A1931 (짙은 수)
+           포인트 그린: #1E5128 (안정적인 목)
+           배경 그린: #F1F8F5
+        */
+
+        /* 그라데이션 텍스트 대신 짙은 네이비로 변경 */
+        .brand-text { color: #0A1931; }
+        
+        /* 카테고리 카드 스타일 수정 */
         .category-card { 
             background: white; 
-            border-radius: 1.5rem; 
+            border-radius: 1.25rem; 
             padding: 1rem 0.25rem; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             cursor: pointer; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
-            transition: all 0.2s; 
-            border: 1px solid #f1f5f9; 
+            box-shadow: 0 4px 12px rgba(10, 25, 49, 0.03); 
+            transition: all 0.25s ease-out; 
+            border: 1px solid #e2e8f0; 
             min-height: 105px; 
             justify-content: center; 
         }
-        .category-card:active { transform: scale(0.95); background: #f8fafc; }
+        .category-card:active { transform: scale(0.96); background: #f8fafc; border-color: #cbd5e1; }
         
+        /* 아이콘 래퍼 디자인 변경 (더 차분하게) */
         .icon-wrapper { 
-            width: 3rem; 
-            height: 3rem; 
-            border-radius: 1.1rem; 
+            width: 3.2rem; 
+            height: 3.2rem; 
+            border-radius: 1rem; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 1.5rem; 
-            margin-bottom: 0.6rem; 
-            box-shadow: inset 0 -2px 4px rgba(0,0,0,0.05);
+            font-size: 1.6rem; 
+            margin-bottom: 0.7rem; 
+            background: #F1F5F9; /* 차분한 그레이 배경 */
+            color: #1E5128; /* 포인트 그린 아이콘 */
         }
 
-        /* 내비게이션 스타일 */
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #94a3b8; font-weight: 700; cursor: pointer; transition: color 0.2s; flex: 1; }
-        .nav-item.active { color: #4f46e5; }
+        /* 내비게이션 스타일 수정 (네이비 & 그린) */
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #94a3b8; font-weight: 600; cursor: pointer; transition: all 0.2s; flex: 1; }
+        .nav-item.active { color: #1E5128; } /* 활성 상태는 안정적인 그린 */
     </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-900 overflow-x-hidden">
+<body class="bg-[#F8FAFC] text-[#1A202C] overflow-x-hidden">
 
-    <div class="max-w-2xl mx-auto min-h-screen flex flex-col relative bg-white shadow-xl">
+    <div class="max-w-2xl mx-auto min-h-screen flex flex-col relative bg-white shadow-2xl shadow-[#0A1931]/5">
         
-        <header class="bg-white/90 backdrop-blur-md px-5 py-4 flex justify-between items-center sticky top-0 z-[100] border-b border-slate-100">
+        <header class="bg-white/95 backdrop-blur-md px-6 py-4.5 flex justify-between items-center sticky top-0 z-[100] border-b border-slate-100">
             <div class="flex items-center gap-2">
-                <h1 class="text-2xl font-black gradient-text tracking-tighter cursor-pointer" onclick="location.href='index.html'">Quest-K</h1>
+                <h1 class="text-2xl font-900 brand-text tracking-tighter cursor-pointer" onclick="location.href='index.html'">Quest-K</h1>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3.5">
                 <div class="text-right">
-                    <div id="display-nickname" class="text-[10px] font-black text-slate-400 leading-none">GUEST</div>
-                    <div id="display-points" class="text-xs font-black text-indigo-600">0P</div>
-                </div>
-                <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=QuestK" alt="avatar">
+                    <div id="display-nickname" class="text-[11px] font-700 text-slate-400 leading-none uppercase tracking-wider">GUEST</div>
+                    <div id="display-points" class="text-sm font-800 text-[#1E5128]">0P</div> </div>
+                <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden shadow-inner">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=QuestK&backgroundColor=0A1931,1E5128" alt="avatar">
                 </div>
             </div>
         </header>
 
         <main class="flex-grow pb-safe overflow-y-auto fade-in">
             
-            <section class="px-5 mt-6">
-                <div class="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[2.5rem] p-8 text-white shadow-xl h-48 flex flex-col justify-center relative overflow-hidden">
+            <section class="px-6 mt-7">
+                <div class="bg-[#0A1931] rounded-[2rem] p-9 text-white shadow-lg shadow-[#0A1931]/10 h-52 flex flex-col justify-center relative overflow-hidden">
                     <div class="relative z-10">
-                        <h2 class="text-2xl font-black leading-tight">광고 시청 시<br>포인트 2배 보상!</h2>
-                        <p class="text-sm text-indigo-100 mt-2 font-medium opacity-90">상위 랭킹 도전의 지름길 🚀</p>
+                        <h2 class="text-2xl font-800 leading-tight tracking-tight">광고 시청 시<br><span class="text-[#89FFA5]">포인트 2배</span> 보상!</h2> <p class="text-sm text-slate-300 mt-2.5 font-medium opacity-90">상위 랭킹 도전의 지름길 💎</p>
                     </div>
-                    <div class="absolute -right-6 -bottom-6 text-9xl opacity-10 rotate-12">💎</div>
+                    <div class="absolute -right-20 -bottom-20 w-60 h-60 bg-[#1E5128] rounded-full opacity-20 blur-3xl"></div>
                 </div>
             </section>
 
-            <section class="px-5 mt-10">
-                <h3 class="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
-                    <span class="w-1.5 h-6 bg-indigo-600 rounded-full"></span>어디로 가시나요?
-                </h3>
-                <div class="grid grid-cols-4 gap-3">
+            <section class="px-6 mt-11">
+                <h3 class="text-xl font-800 text-[#0A1931] mb-6.5 flex items-center gap-2.5">
+                    <span class="w-1.5 h-6 bg-[#1E5128] rounded-full"></span>어디로 가시나요? </h3>
+                <div class="grid grid-cols-4 gap-3.5">
                     <div class="category-card" onclick="goToMission('region', '서울')">
-                        <div class="icon-wrapper bg-orange-50 text-orange-500">🏙️</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">서울</span>
+                        <div class="icon-wrapper">🏙️</div>
+                        <span class="text-xs font-700 text-slate-700">서울</span>
                     </div>
                     <div class="category-card" onclick="goToMission('region', '경기')">
-                        <div class="icon-wrapper bg-blue-50 text-blue-500">🏰</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">경기</span>
+                        <div class="icon-wrapper">🏰</div>
+                        <span class="text-xs font-700 text-slate-700">경기</span>
                     </div>
                     <div class="category-card" onclick="goToMission('region', '강원')">
-                        <div class="icon-wrapper bg-emerald-50 text-emerald-600">🌲</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">강원</span>
+                        <div class="icon-wrapper">🌲</div>
+                        <span class="text-xs font-700 text-slate-700">강원</span>
                     </div>
                     <div class="category-card" onclick="goToMission('region', '충청')">
-                        <div class="icon-wrapper bg-amber-50 text-amber-600">🌾</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">충청</span>
+                        <div class="icon-wrapper">🌾</div>
+                        <span class="text-xs font-700 text-slate-700">충청</span>
                     </div>
                     <div class="category-card" onclick="goToMission('region', '전라')">
-                        <div class="icon-wrapper bg-red-50 text-red-600">🥘</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">전라</span>
+                        <div class="icon-wrapper">🥘</div>
+                        <span class="text-xs font-700 text-slate-700">전라</span>
                     </div>
                     <div class="category-card" onclick="goToMission('region', '경상')">
-                        <div class="icon-wrapper bg-cyan-50 text-cyan-600">⚓</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">경상</span>
+                        <div class="icon-wrapper">⚓</div>
+                        <span class="text-xs font-700 text-slate-700">경상</span>
                     </div>
                     <div class="category-card" onclick="goToMission('region', '제주')">
-                        <div class="icon-wrapper bg-pink-50 text-pink-500">🗿</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">제주</span>
+                        <div class="icon-wrapper">🗿</div>
+                        <span class="text-xs font-700 text-slate-700">제주</span>
                     </div>
                     <div class="category-card" onclick="goToMission('region', '전국공통')">
-                        <div class="icon-wrapper bg-gray-100 text-gray-500">🌍</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">전국</span>
+                        <div class="icon-wrapper">🌍</div>
+                        <span class="text-xs font-700 text-slate-700">전국</span>
                     </div>
                 </div>
             </section>
 
-            <section class="px-5 mt-10 mb-12">
-                <h3 class="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
-                    <span class="w-1.5 h-6 bg-purple-600 rounded-full"></span>어떤 미션을 하고 싶나요?
+            <section class="px-6 mt-11 mb-14">
+                <h3 class="text-xl font-800 text-[#0A1931] mb-6.5 flex items-center gap-2.5">
+                    <span class="w-1.5 h-6 bg-[#1E5128] rounded-full"></span>어떤 미션을 하고 싶나요?
                 </h3>
-                <div class="grid grid-cols-4 gap-3">
+                <div class="grid grid-cols-4 gap-3.5">
                     <div class="category-card" onclick="goToMission('category', 'K-Food')">
-                        <div class="icon-wrapper bg-red-50 text-red-500">🥘</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">음식</span>
+                        <div class="icon-wrapper bg-[#F1F8F5]">🥘</div> <span class="text-xs font-700 text-slate-700">음식</span>
                     </div>
                     <div class="category-card" onclick="goToMission('category', 'Nature')">
-                        <div class="icon-wrapper bg-emerald-50 text-emerald-500">🏔️</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">자연</span>
+                        <div class="icon-wrapper bg-[#F1F8F5]">🏔️</div>
+                        <span class="text-xs font-700 text-slate-700">자연</span>
                     </div>
                     <div class="category-card" onclick="goToMission('category', 'History')">
-                        <div class="icon-wrapper bg-amber-50 text-amber-500">🏯</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">역사</span>
+                        <div class="icon-wrapper bg-[#F1F8F5]">🏯</div>
+                        <span class="text-xs font-700 text-slate-700">역사</span>
                     </div>
                     <div class="category-card" onclick="goToMission('category', 'K-Life')">
-                        <div class="icon-wrapper bg-indigo-50 text-indigo-500">🏠</div>
-                        <span class="text-[0.7rem] font-black text-slate-600">K-라이프</span>
+                        <div class="icon-wrapper bg-[#F1F8F5]">🏠</div>
+                        <span class="text-xs font-700 text-slate-700">K-라이프</span>
                     </div>
                 </div>
             </section>
         </main>
 
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/95 backdrop-blur-2xl border-t border-slate-100 px-10 py-4 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.06)]">
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/98 backdrop-blur-2xl border-t border-slate-100 px-12 py-4.5 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-12px_40px_rgba(10,25,49,0.05)]">
             <button class="nav-item active" onclick="location.href='index.html'">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4" /></svg>
                 <span>미션</span>
             </button>
             <button class="nav-item" onclick="alert('찜 목록은 준비 중입니다!')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
                 <span>찜</span>
             </button>
             <button class="nav-item" onclick="alert('나의 기록은 준비 중입니다!')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 <span>기록</span>
             </button>
         </nav>
@@ -165,14 +171,11 @@
     <script>
         // mission.html로 데이터 전송 함수
         function goToMission(type, value) {
-            // URL 파라미터로 넘김 (예: mission.html?type=region&value=서울)
             location.href = `mission.html?type=${type}&value=${encodeURIComponent(value)}`;
         }
 
-        // 앱 초기화 로직 (필요 시 Supabase 세션 체크 추가)
         window.onload = () => {
-            console.log("Quest-K Main Loaded");
-            // 로컬 스토리지에 저장된 유저 정보가 있다면 표시하는 로직 등을 여기에 작성하세요.
+            console.log("Quest-K Main Loaded with Navy & Green Theme");
         };
     </script>
 </body>
