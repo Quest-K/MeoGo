@@ -13,18 +13,14 @@
         .category-card { background: white; border-radius: 1.5rem; padding: 1rem 0.25rem; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #f1f5f9; min-height: 100px; justify-content: center; }
         .category-card:active { transform: scale(0.95); }
         .icon-wrapper { width: 3rem; height: 3rem; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 0.5rem; }
-        
-        /* Navigation */
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #94a3b8; font-weight: 700; cursor: pointer; transition: color 0.2s; flex: 1; }
         .nav-item.active { color: #4f46e5; }
-        
-        /* Dropdown */
         #lang-dropdown { transform-origin: top right; animation: dropdownScale 0.2s ease-out forwards; }
         @keyframes dropdownScale { from { opacity: 0; transform: scale(0.95) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-
-        /* Mission Card */
         .mission-card { background: white; border: 1px solid #f1f5f9; border-radius: 1.25rem; padding: 1.25rem; margin-bottom: 1rem; animation: fadeIn 0.4s ease-out; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .tag { font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; margin-right: 4px; }
+        /* 번역 로딩 중 효과 */
+        .translating { opacity: 0.5; filter: blur(1px); pointer-events: none; }
     </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-900 overflow-x-hidden">
@@ -116,32 +112,34 @@
     </script>
 
     <script>
-        // 1. Supabase Initialization
         const SUPABASE_URL = 'https://xyyoeovwrkcwhwdmjeyx.supabase.co'; 
         const SUPABASE_ANON_KEY = 'sb_publishable_Jm_XX_GapNRJEdlQGBP7hw_JqdtHkjX';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 2. Multi-language Dictionary (Updated for All Regions)
         const mainI18n = {
-            KO: { "nav-mission": "미션", "nav-wish": "찜", "nav-history": "기록", "banner-title": "광고 시청 시<br>포인트 2배 보상!", "banner-sub": "상위 랭킹 도전의 지름길", "home-title": "어디로 가시나요?", "reg-seoul": "서울", "reg-gyeonggi": "경기", "reg-gangwon": "강원", "reg-chungcheong": "충청", "reg-jeolla": "전라", "reg-gyeongsang": "경상", "reg-jeju": "제주", "reg-anywhere": "전국", "mission-cat-title": "어떤 미션을 하고 싶나요?", "cat-food": "음식", "cat-nature": "자연", "cat-history": "역사", "cat-klife": "K-라이프" },
-            EN: { "nav-mission": "Mission", "nav-wish": "Wish", "nav-history": "History", "banner-title": "Watch Ads<br>Get 2x Points!", "banner-sub": "Fastest way to rank up", "home-title": "Where to go?", "reg-seoul": "Seoul", "reg-gyeonggi": "Gyeonggi", "reg-gangwon": "Gangwon", "reg-chungcheong": "Chungcheong", "reg-jeolla": "Jeolla", "reg-gyeongsang": "Gyeongsang", "reg-jeju": "Jeju", "reg-anywhere": "All", "mission-cat-title": "Mission Category", "cat-food": "Food", "cat-nature": "Nature", "cat-history": "History", "cat-klife": "K-Life" },
-            JP: { "nav-mission": "ミッション", "nav-wish": "ウィッシュ", "nav-history": "記録", "banner-title": "広告視聴で<br>ポイント2倍！", "banner-sub": "ランキングへの近道", "home-title": "どこへ行きますか？", "reg-seoul": "ソウル", "reg-gyeonggi": "京畿", "reg-gangwon": "江原", "reg-chungcheong": "忠清", "reg-jeolla": "全羅", "reg-gyeongsang": "慶尚", "reg-jeju": "済州", "reg-anywhere": "全国", "mission-cat-title": "ミッションの選択", "cat-food": "グルメ", "cat-nature": "自然", "cat-history": "歴史", "cat-klife": "Kライフ" },
-            CN: { "nav-mission": "任务", "nav-wish": "收藏", "nav-history": "记录", "banner-title": "观看广告<br>积分翻倍！", "banner-sub": "提升排名的捷径", "home-title": "你想去哪里？", "reg-seoul": "首尔", "reg-gyeonggi": "京畿", "reg-gangwon": "江原", "reg-chungcheong": "忠清", "reg-jeolla": "全罗", "reg-gyeongsang": "庆尚", "reg-jeju": "济州", "reg-anywhere": "全国", "mission-cat-title": "选择任务类别", "cat-food": "美食", "cat-nature": "自然", "cat-history": "历史", "cat-klife": "K-生活" },
-            TW: { "nav-mission": "任務", "nav-wish": "收藏", "nav-history": "記錄", "banner-title": "觀看廣告<br>積分翻倍！", "banner-sub": "提升排名的捷徑", "home-title": "你想去哪裡？", "reg-seoul": "首爾", "reg-gyeonggi": "京畿", "reg-gangwon": "江原", "reg-chungcheong": "忠清", "reg-jeolla": "全羅", "reg-gyeongsang": "慶尚", "reg-jeju": "濟州", "reg-anywhere": "全國", "mission-cat-title": "選擇任務類別", "cat-food": "美食", "cat-nature": "自然", "cat-history": "歷史", "cat-klife": "K-生活" },
-            VN: { "nav-mission": "Nhiệm vụ", "nav-wish": "Yêu thích", "nav-history": "Lịch sử", "banner-title": "Xem quảng cáo<br>Nhận x2 điểm!", "banner-sub": "Cách nhanh nhất để thăng hạng", "home-title": "Bạn muốn đi đâu?", "reg-seoul": "Seoul", "reg-gyeonggi": "Gyeonggi", "reg-gangwon": "Gangwon", "reg-chungcheong": "Chungcheong", "reg-jeolla": "Jeolla", "reg-gyeongsang": "Gyeongsang", "reg-jeju": "Jeju", "reg-anywhere": "Toàn quốc", "mission-cat-title": "Chọn hạng mục", "cat-food": "Ẩm thực", "cat-nature": "Tự nhiên", "cat-history": "Lịch sử", "cat-klife": "K-Life" }
+            KO: { "nav-mission": "미션", "nav-wish": "찜", "nav-history": "기록", "banner-title": "광고 시청 시<br>포인트 2배 보상!", "banner-sub": "상위 랭킹 도전의 지름길", "home-title": "어디로 가시나요?", "reg-seoul": "서울", "reg-gyeonggi": "경기", "reg-gangwon": "강원", "reg-chungcheong": "충청", "reg-jeolla": "전라", "reg-gyeongsang": "경상", "reg-jeju": "제주", "reg-anywhere": "전국", "mission-cat-title": "어떤 미션을 하고 싶나요?", "cat-food": "음식", "cat-nature": "자연", "cat-history": "역사", "cat-klife": "K-라이프", "btn-accept": "도전하기" },
+            EN: { "nav-mission": "Mission", "nav-wish": "Wish", "nav-history": "History", "banner-title": "Watch Ads<br>Get 2x Points!", "banner-sub": "Fastest way to rank up", "home-title": "Where to go?", "reg-seoul": "Seoul", "reg-gyeonggi": "Gyeonggi", "reg-gangwon": "Gangwon", "reg-chungcheong": "Chungcheong", "reg-jeolla": "Jeolla", "reg-gyeongsang": "Gyeongsang", "reg-jeju": "Jeju", "reg-anywhere": "All", "mission-cat-title": "Mission Category", "cat-food": "Food", "cat-nature": "Nature", "cat-history": "History", "cat-klife": "K-Life", "btn-accept": "Accept" },
+            JP: { "nav-mission": "ミッション", "nav-wish": "ウィッシュ", "nav-history": "記録", "banner-title": "広告視聴で<br>ポイント2倍！", "banner-sub": "ランキングへの近道", "home-title": "どこへ行きますか？", "reg-seoul": "ソウル", "reg-gyeonggi": "京畿", "reg-gangwon": "江原", "reg-chungcheong": "忠清", "reg-jeolla": "全羅", "reg-gyeongsang": "慶尚", "reg-jeju": "済州", "reg-anywhere": "全国", "mission-cat-title": "ミッションの選択", "cat-food": "グルメ", "cat-nature": "自然", "cat-history": "歴史", "cat-klife": "Kライフ", "btn-accept": "挑戦する" },
+            CN: { "nav-mission": "任务", "nav-wish": "收藏", "nav-history": "记录", "banner-title": "观看广告<br>积分翻배！", "banner-sub": "提升排名的捷径", "home-title": "你想去哪里？", "reg-seoul": "首尔", "reg-gyeonggi": "京畿", "reg-gangwon": "江原", "reg-chungcheong": "忠清", "reg-jeolla": "全罗", "reg-gyeongsang": "庆尚", "reg-jeju": "济州", "reg-anywhere": "全国", "mission-cat-title": "选择任务类别", "cat-food": "美食", "cat-nature": "自然", "cat-history": "历史", "cat-klife": "K-生活", "btn-accept": "挑战" },
+            TW: { "nav-mission": "任務", "nav-wish": "收藏", "nav-history": "記錄", "banner-title": "觀看廣告<br>積分翻倍！", "banner-sub": "提升排名的捷徑", "home-title": "你想去哪裡？", "reg-seoul": "首爾", "reg-gyeonggi": "京畿", "reg-gangwon": "江原", "reg-chungcheong": "忠清", "reg-jeolla": "全羅", "reg-gyeongsang": "慶尚", "reg-jeju": "濟州", "reg-anywhere": "全國", "mission-cat-title": "選擇任務類別", "cat-food": "美食", "cat-nature": "自然", "cat-history": "歷史", "cat-klife": "K-生活", "btn-accept": "挑戰" },
+            VN: { "nav-mission": "Nhiệm vụ", "nav-wish": "Yêu thích", "nav-history": "Lịch sử", "banner-title": "Xem quảng cáo<br>Nhận x2 điểm!", "banner-sub": "Cách nhanh nhất để thăng hạng", "home-title": "Bạn muốn đi đâu?", "reg-seoul": "Seoul", "reg-gyeonggi": "Gyeonggi", "reg-gangwon": "Gangwon", "reg-chungcheong": "Chungcheong", "reg-jeolla": "Jeolla", "reg-gyeongsang": "Gyeongsang", "reg-jeju": "Jeju", "reg-anywhere": "Toàn quốc", "mission-cat-title": "Chọn hạng mục", "cat-food": "Ẩm thực", "cat-nature": "Tự nhiên", "cat-history": "Lịch sử", "cat-klife": "K-Life", "btn-accept": "Chấp nhận" }
         };
 
         const contentArea = document.getElementById('main-content');
         const backBtn = document.getElementById('back-btn');
         const langDropdown = document.getElementById('lang-dropdown');
+        let currentMissions = []; // 현재 로드된 미션 저장용
 
-        // 3. Language Controller
         function toggleLangDropdown(e) { e.stopPropagation(); langDropdown.classList.toggle('hidden'); }
         
-        function selectLanguage(langCode) {
+        async function selectLanguage(langCode) {
             localStorage.setItem('selectedLang', langCode);
             applyLanguage();
             langDropdown.classList.add('hidden');
+            // 미션 리스트가 있는 경우 미션 내용도 즉시 번역
+            if (currentMissions.length > 0) {
+                renderMissionList(document.getElementById('list-title').innerText.replace('Loading...', '').trim(), currentMissions);
+            }
         }
 
         function applyLanguage() {
@@ -154,51 +152,90 @@
             });
         }
 
-        // 4. Data Fetching
+        // AI 번역 함수 (Google Translate 무료 API 우회 방식)
+        async function translateText(text, targetLang) {
+            if (targetLang === 'KO') return text;
+            const langMap = { 'EN': 'en', 'JP': 'ja', 'CN': 'zh-CN', 'TW': 'zh-TW', 'VN': 'vi' };
+            const target = langMap[targetLang] || 'en';
+            try {
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=ko&tl=${target}&dt=t&q=${encodeURIComponent(text)}`);
+                const data = await res.json();
+                return data[0].map(s => s[0]).join('');
+            } catch (e) {
+                return text; // 실패 시 원본 반환
+            }
+        }
+
         async function fetchMissionsByFilter(type, value) {
             contentArea.innerHTML = '<div class="flex flex-col items-center justify-center h-64"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-4"></div><p class="text-slate-400 font-bold">Loading...</p></div>';
             backBtn.classList.remove('invisible');
             
             const { data, error } = await _supabase.from('missions').select('*').eq(type, value);
-
             if (error) {
                 contentArea.innerHTML = `<div class="p-20 text-center text-red-500">Error: ${error.message}</div>`;
                 return;
             }
-            renderMissionList(`${value}`, data);
+            currentMissions = data;
+            renderMissionList(value, data);
         }
 
-        function renderMissionList(title, items) {
+        async function renderMissionList(title, items) {
+            const savedLang = localStorage.getItem('selectedLang') || 'KO';
             contentArea.innerHTML = document.getElementById('tpl-mission-list').innerHTML;
-            document.getElementById('list-title').innerHTML = `<span class="w-1.5 h-6 bg-indigo-600 rounded-full"></span> ${title}`;
+            
+            // 제목 번역
+            const translatedTitle = await translateText(title, savedLang);
+            document.getElementById('list-title').innerHTML = `<span class="w-1.5 h-6 bg-indigo-600 rounded-full"></span> ${translatedTitle}`;
+            
             const container = document.getElementById('mission-items');
-
             if (items.length === 0) {
-                container.innerHTML = '<div class="py-20 text-center text-slate-400 font-bold">No missions found in this area.</div>';
+                container.innerHTML = '<div class="py-20 text-center text-slate-400 font-bold">No missions found.</div>';
                 return;
             }
 
-            items.forEach(item => {
+            // 번역 로딩 중 카드 먼저 생성
+            items.forEach((item, idx) => {
+                const cardId = `mission-card-${idx}`;
                 const el = document.createElement('div');
-                el.className = 'mission-card';
+                el.className = 'mission-card translating';
+                el.id = cardId;
                 el.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
                         <span class="tag bg-indigo-50 text-indigo-600">${item.category}</span>
                         <span class="text-[10px] text-slate-400 font-bold">${item.region}</span>
                     </div>
-                    <h4 class="font-black text-lg mb-1">${item.mission_name}</h4>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-4">${item.guide}</p>
-                    <div class="flex justify-between items-center pt-2 border-t border-slate-50">
-                        <span class="text-indigo-600 font-black text-sm">100P</span>
-                        <button onclick="alert('Mission Accepted!')" class="bg-indigo-600 text-white text-[10px] px-4 py-2 rounded-full font-black shadow-lg shadow-indigo-100 active:scale-95 transition-all">Accept</button>
-                    </div>
+                    <h4 class="font-black text-lg mb-1">...</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-4">Translating...</p>
                 `;
                 container.appendChild(el);
+
+                // 개별 카드 번역 및 업데이트
+                (async () => {
+                    const transName = await translateText(item.mission_name, savedLang);
+                    const transGuide = await translateText(item.guide, savedLang);
+                    const card = document.getElementById(cardId);
+                    if (card) {
+                        card.classList.remove('translating');
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="tag bg-indigo-50 text-indigo-600">${item.category}</span>
+                                <span class="text-[10px] text-slate-400 font-bold">${item.region}</span>
+                            </div>
+                            <h4 class="font-black text-lg mb-1">${transName}</h4>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-4">${transGuide}</p>
+                            <div class="flex justify-between items-center pt-2 border-t border-slate-50">
+                                <span class="text-indigo-600 font-black text-sm">100P</span>
+                                <button onclick="alert('Accepted!')" class="bg-indigo-600 text-white text-[10px] px-4 py-2 rounded-full font-black shadow-lg shadow-indigo-100">${mainI18n[savedLang]['btn-accept']}</button>
+                            </div>
+                        `;
+                    }
+                })();
             });
             window.scrollTo(0, 0);
         }
 
         function goHome() {
+            currentMissions = [];
             contentArea.innerHTML = document.getElementById('tpl-home').innerHTML;
             backBtn.classList.add('invisible');
             applyLanguage();
