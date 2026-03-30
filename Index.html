@@ -5,24 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quest-K | Journey of Assets</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;900&display=swap');
         body { font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; letter-spacing: -0.02em; }
         
-        /* 애니메이션 효과 */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.35s ease-out; }
-        
-        .pb-safe { padding-bottom: calc(8rem + env(safe-area-inset-bottom)); }
-        
-        /* 컬러 가이드 */
         .brand-navy { color: #0A1931; }
         .brand-green { color: #1E5128; }
         .bg-brand-navy { background-color: #0A1931; }
         .bg-brand-green { background-color: #1E5128; }
 
-        /* 카드 스타일 */
         .category-card { 
             background: white; 
             border-radius: 1.25rem; 
@@ -51,222 +42,78 @@
             background: #F1F5F9; 
         }
 
-        /* 내비게이션 */
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #94a3b8; font-weight: 700; cursor: pointer; transition: all 0.2s; flex: 1; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #94a3b8; font-weight: 700; cursor: pointer; flex: 1; }
         .nav-item.active { color: #1E5128; }
+        .pb-safe { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); }
     </style>
 </head>
-<body class="bg-[#F8FAFC] text-[#1A202C] overflow-x-hidden">
+<body class="bg-[#F8FAFC] text-[#1A202C]">
 
     <div class="max-w-2xl mx-auto min-h-screen flex flex-col relative bg-white shadow-2xl">
         
-        <!-- [고정 상단바] -->
+        <!-- 상단바 -->
         <header class="bg-white/95 backdrop-blur-md px-6 py-4 flex justify-between items-center sticky top-0 z-[100] border-b border-slate-100">
-            <div class="flex items-center gap-2">
-                <h1 class="text-2xl font-900 brand-navy tracking-tighter cursor-pointer" onclick="renderHome()">Quest-K</h1>
-            </div>
-            <div class="flex items-center gap-3.5">
+            <h1 class="text-2xl font-900 brand-navy tracking-tighter" onclick="location.reload()">Quest-K</h1>
+            <div class="flex items-center gap-3">
                 <div class="text-right">
-                    <div id="display-nickname" class="text-[11px] font-800 text-slate-400 uppercase tracking-wider leading-none mb-1">GUEST</div>
-                    <div id="display-points" class="text-sm font-900 brand-green">1,250P</div> 
+                    <div class="text-[10px] font-800 text-slate-400 uppercase leading-none mb-1">GUEST</div>
+                    <div class="text-sm font-900 brand-green">1,250P</div> 
                 </div>
-                <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden shadow-inner">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=QuestK&backgroundColor=0A1931,1E5128" alt="avatar">
+                <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=QuestK" alt="avatar">
                 </div>
             </div>
         </header>
 
-        <!-- [교체되는 본문 영역] -->
-        <main id="app-view" class="flex-grow pb-safe overflow-y-auto"></main>
+        <main class="flex-grow pb-safe">
+            <!-- 배너 -->
+            <section class="px-6 mt-6">
+                <div class="bg-brand-navy rounded-[2rem] p-8 text-white h-44 flex flex-col justify-center relative overflow-hidden shadow-lg">
+                    <h2 class="text-2xl font-900 leading-tight z-10">광고 시청 시<br><span class="text-[#89FFA5]">포인트 2배</span> 보상!</h2>
+                    <div class="absolute -right-16 -bottom-16 w-48 h-48 bg-brand-green rounded-full opacity-20 blur-3xl"></div>
+                </div>
+            </section>
 
-        <!-- [고정 하단바] -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/98 backdrop-blur-2xl border-t border-slate-100 px-6 py-4.5 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-12px_40px_rgba(10,25,49,0.05)]">
-            <button id="nav-home" class="nav-item active" onclick="renderHome()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4" /></svg>
-                <span>미션</span>
-            </button>
-            <button id="nav-wish" class="nav-item" onclick="renderWish()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                <span>찜</span>
-            </button>
-            <button id="nav-history" class="nav-item" onclick="renderHistory()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                <span>기록</span>
-            </button>
-            <button id="nav-mypage" class="nav-item" onclick="renderMypage()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                <span>마이</span>
-            </button>
+            <!-- 지역 섹션 -->
+            <section class="px-6 mt-10">
+                <h3 class="text-lg font-900 brand-navy mb-5 flex items-center gap-2"><span class="w-1.5 h-5 bg-brand-green rounded-full"></span>어디로 가시나요?</h3>
+                <div class="grid grid-cols-4 gap-3">
+                    <div class="category-card" onclick="goToMissions('region', '서울')"><div class="icon-wrapper">🏙️</div><span class="text-[0.7rem] font-800 text-slate-700">서울</span></div>
+                    <div class="category-card" onclick="goToMissions('region', '경기')"><div class="icon-wrapper">🏰</div><span class="text-[0.7rem] font-800 text-slate-700">경기</span></div>
+                    <div class="category-card" onclick="goToMissions('region', '강원')"><div class="icon-wrapper">🌲</div><span class="text-[0.7rem] font-800 text-slate-700">강원</span></div>
+                    <div class="category-card" onclick="goToMissions('region', '충청')"><div class="icon-wrapper">🌾</div><span class="text-[0.7rem] font-800 text-slate-700">충청</span></div>
+                    <div class="category-card" onclick="goToMissions('region', '전라')"><div class="icon-wrapper">🥘</div><span class="text-[0.7rem] font-800 text-slate-700">전라</span></div>
+                    <div class="category-card" onclick="goToMissions('region', '경상')"><div class="icon-wrapper">⚓</div><span class="text-[0.7rem] font-800 text-slate-700">경상</span></div>
+                    <div class="category-card" onclick="goToMissions('region', '제주')"><div class="icon-wrapper">🗿</div><span class="text-[0.7rem] font-800 text-slate-700">제주</span></div>
+                    <div class="category-card" onclick="goToMissions('region', '전국')"><div class="icon-wrapper">🌍</div><span class="text-[0.7rem] font-800 text-slate-700">전국</span></div>
+                </div>
+            </section>
+
+            <!-- 카테고리 섹션 -->
+            <section class="px-6 mt-10 mb-6">
+                <h3 class="text-lg font-900 brand-navy mb-5 flex items-center gap-2"><span class="w-1.5 h-5 bg-brand-green rounded-full"></span>무엇을 하고 싶나요?</h3>
+                <div class="grid grid-cols-4 gap-3">
+                    <div class="category-card" onclick="goToMissions('category', 'Food')"><div class="icon-wrapper">🍱</div><span class="text-[0.7rem] font-800 text-slate-700">음식</span></div>
+                    <div class="category-card" onclick="goToMissions('category', 'Nature')"><div class="icon-wrapper">🏔️</div><span class="text-[0.7rem] font-800 text-slate-700">자연</span></div>
+                    <div class="category-card" onclick="goToMissions('category', 'History')"><div class="icon-wrapper">📜</div><span class="text-[0.7rem] font-800 text-slate-700">역사</span></div>
+                    <div class="category-card" onclick="goToMissions('category', 'K-Life')"><div class="icon-wrapper">🏠</div><span class="text-[0.7rem] font-800 text-slate-700">K-라이프</span></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 하단바 -->
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/98 backdrop-blur-xl border-t border-slate-100 px-6 py-4 flex justify-between items-center z-50 rounded-t-[2rem] shadow-2xl">
+            <button class="nav-item active"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg><span>미션</span></button>
+            <button class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg><span>찜</span></button>
+            <button class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>기록</span></button>
+            <button class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg><span>마이</span></button>
         </nav>
     </div>
 
-    <!-- [Templates] 각 섹션 구조 -->
-    
-    <!-- 1. 메인 홈 템플릿 -->
-    <template id="tpl-home">
-        <div class="fade-in">
-            <section class="px-6 mt-7">
-                <div class="bg-[#0A1931] rounded-[2.2rem] p-9 text-white shadow-lg h-52 flex flex-col justify-center relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h2 class="text-2xl font-900 leading-tight">광고 시청 시<br><span class="text-[#89FFA5]">포인트 2배</span> 보상!</h2> 
-                        <p class="text-sm text-slate-300 mt-2 font-medium opacity-90">상위 랭킹 도전의 지름길 💎</p>
-                    </div>
-                    <div class="absolute -right-20 -bottom-20 w-60 h-60 bg-[#1E5128] rounded-full opacity-20 blur-3xl"></div>
-                </div>
-            </section>
-
-            <section class="px-6 mt-11">
-                <h3 class="text-xl font-900 brand-navy mb-6 flex items-center gap-2.5">
-                    <span class="w-1.5 h-6 bg-brand-green rounded-full"></span>어디로 가시나요? 
-                </h3>
-                <div class="grid grid-cols-4 gap-3.5">
-                    <div class="category-card" onclick="renderMissionList('region', '서울')"><div class="icon-wrapper">🏙️</div><span class="text-[0.7rem] font-800 text-slate-700">서울</span></div>
-                    <div class="category-card" onclick="renderMissionList('region', '경기')"><div class="icon-wrapper">🏰</div><span class="text-[0.7rem] font-800 text-slate-700">경기</span></div>
-                    <div class="category-card" onclick="renderMissionList('region', '강원')"><div class="icon-wrapper">🌲</div><span class="text-[0.7rem] font-800 text-slate-700">강원</span></div>
-                    <div class="category-card" onclick="renderMissionList('region', '충청')"><div class="icon-wrapper">🌾</div><span class="text-[0.7rem] font-800 text-slate-700">충청</span></div>
-                    <div class="category-card" onclick="renderMissionList('region', '전라')"><div class="icon-wrapper">🥘</div><span class="text-[0.7rem] font-800 text-slate-700">전라</span></div>
-                    <div class="category-card" onclick="renderMissionList('region', '경상')"><div class="icon-wrapper">⚓</div><span class="text-[0.7rem] font-800 text-slate-700">경상</span></div>
-                    <div class="category-card" onclick="renderMissionList('region', '제주')"><div class="icon-wrapper">🗿</div><span class="text-[0.7rem] font-800 text-slate-700">제주</span></div>
-                    <div class="category-card" onclick="renderMissionList('region', '전국')"><div class="icon-wrapper">🌍</div><span class="text-[0.7rem] font-800 text-slate-700">전국</span></div>
-                </div>
-            </section>
-
-            <section class="px-6 mt-11 mb-10">
-                <h3 class="text-xl font-900 brand-navy mb-6 flex items-center gap-2.5">
-                    <span class="w-1.5 h-6 bg-brand-green rounded-full"></span>어떤 미션을 하고 싶나요?
-                </h3>
-                <div class="grid grid-cols-4 gap-3.5">
-                    <div class="category-card" onclick="renderMissionList('category', 'Food')"><div class="icon-wrapper bg-[#F1F8F5]">🍱</div><span class="text-[0.7rem] font-800 text-slate-700">음식</span></div>
-                    <div class="category-card" onclick="renderMissionList('category', 'Nature')"><div class="icon-wrapper bg-[#F1F8F5]">🏔️</div><span class="text-[0.7rem] font-800 text-slate-700">자연</span></div>
-                    <div class="category-card" onclick="renderMissionList('category', 'History')"><div class="icon-wrapper bg-[#F1F8F5]">🏰</div><span class="text-[0.7rem] font-800 text-slate-700">역사</span></div>
-                    <div class="category-card" onclick="renderMissionList('category', 'K-Life')"><div class="icon-wrapper bg-[#F1F8F5]">🏠</div><span class="text-[0.7rem] font-800 text-slate-700">K-라이프</span></div>
-                </div>
-            </section>
-        </div>
-    </template>
-
-    <!-- 2. 미션 리스트 템플릿 -->
-    <template id="tpl-mission">
-        <div class="p-6 fade-in">
-            <div class="flex items-center gap-3 mb-8">
-                <button onclick="renderHome()" class="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-full active:scale-90 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
-                </button>
-                <h3 id="mission-list-title" class="text-2xl font-900 brand-navy">미션 목록</h3>
-            </div>
-            
-            <div id="mission-items-container" class="space-y-4">
-                <!-- 미션 데이터 렌더링 영역 -->
-                <div class="flex flex-col items-center justify-center py-20 opacity-20">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-navy"></div>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <!-- 3. 공통 빈 화면 템플릿 (찜, 기록, 마이) -->
-    <template id="tpl-empty">
-        <div class="flex flex-col items-center justify-center min-h-[60vh] p-10 fade-in">
-            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-                <span id="empty-icon" class="text-4xl">🛠️</span>
-            </div>
-            <h4 id="empty-title" class="text-xl font-900 brand-navy mb-2">준비 중인 페이지입니다</h4>
-            <p class="text-slate-400 text-center font-medium">더 나은 서비스를 위해<br>열심히 제작하고 있어요!</p>
-            <button onclick="renderHome()" class="mt-8 bg-brand-navy text-white px-8 py-3 rounded-2xl font-800 text-sm shadow-lg shadow-brand-navy/20 active:scale-95 transition-transform">홈으로 돌아가기</button>
-        </div>
-    </template>
-
     <script>
-        const appView = document.getElementById('app-view');
-
-        // [핵심 로직 1] 공통 화면 렌더러
-        function renderView(templateId) {
-            const template = document.getElementById(templateId);
-            const clone = template.content.cloneNode(true);
-            appView.innerHTML = '';
-            appView.appendChild(clone);
-            window.scrollTo(0, 0); // 페이지 상단 이동
+        function goToMissions(type, value) {
+            location.href = `Mission.html?type=${type}&value=${encodeURIComponent(value)}`;
         }
-
-        // [핵심 로직 2] 하단 내비게이션 상태 관리
-        function updateNav(activeId) {
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            document.getElementById(activeId).classList.add('active');
-        }
-
-        // [기능 1] 홈 렌더링
-        function renderHome() {
-            renderView('tpl-home');
-            updateNav('nav-home');
-        }
-
-        // [기능 2] 미션 리스트 렌더링 (필터링 포함)
-        async function renderMissionList(type, value) {
-            renderView('tpl-mission');
-            const titleEl = document.getElementById('mission-list-title');
-            titleEl.innerText = `${value} 미션`;
-
-            const container = document.getElementById('mission-items-container');
-            
-            // 실제 서비스 시 Supabase Fetch 로직이 들어갈 자리입니다.
-            // 여기서는 UI 확인을 위한 Mock Data를 생성합니다.
-            setTimeout(() => {
-                container.innerHTML = '';
-                const mockMissions = [
-                    { id: 1, name: `${value}의 숨은 보물 찾기`, category: 'Nature', points: 150 },
-                    { id: 2, name: `${value} 대표 음식 맛보기`, category: 'Food', points: 100 },
-                    { id: 3, name: `${value}의 역사를 걷다`, category: 'History', points: 200 }
-                ];
-
-                mockMissions.forEach(m => {
-                    container.innerHTML += `
-                        <div class="bg-white border border-slate-100 p-5 rounded-[1.8rem] shadow-sm flex flex-col gap-3 active:bg-slate-50 transition-colors cursor-pointer">
-                            <div class="flex justify-between items-start">
-                                <span class="px-3 py-1 bg-brand-green/10 text-brand-green text-[10px] font-900 rounded-full uppercase tracking-wider">${m.category}</span>
-                                <span class="text-brand-navy font-900 text-sm">💎 ${m.points}P</span>
-                            </div>
-                            <h4 class="text-lg font-900 brand-navy leading-tight">${m.name}</h4>
-                            <div class="flex items-center gap-2 mt-1">
-                                <div class="flex -space-x-2">
-                                    <div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200"></div>
-                                    <div class="w-6 h-6 rounded-full border-2 border-white bg-slate-300"></div>
-                                </div>
-                                <span class="text-[11px] text-slate-400 font-700">12명 도전 중</span>
-                            </div>
-                        </div>
-                    `;
-                });
-            }, 400); // 로딩 효과 시뮬레이션
-        }
-
-        // [기능 3] 찜 화면
-        function renderWish() {
-            renderView('tpl-empty');
-            document.getElementById('empty-title').innerText = '나의 찜 목록';
-            document.getElementById('empty-icon').innerText = '❤️';
-            updateNav('nav-wish');
-        }
-
-        // [기능 4] 기록 화면
-        function renderHistory() {
-            renderView('tpl-empty');
-            document.getElementById('empty-title').innerText = '나의 활동 기록';
-            document.getElementById('empty-icon').innerText = '📜';
-            updateNav('nav-history');
-        }
-
-        // [기능 5] 마이페이지
-        function renderMypage() {
-            renderView('tpl-empty');
-            document.getElementById('empty-title').innerText = '마이페이지';
-            document.getElementById('empty-icon').innerText = '👤';
-            updateNav('nav-mypage');
-        }
-
-        // 앱 시작 시 홈 로드
-        window.onload = () => {
-            renderHome();
-        };
     </script>
 </body>
 </html>
