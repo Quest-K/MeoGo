@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quest-K | Journey of Assets</title>
+    <title>MeoGo | Journey of Assets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;900&display=swap');
@@ -44,29 +44,28 @@
 
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #94a3b8; font-weight: 700; cursor: pointer; flex: 1; }
         .nav-item.active { color: #1E5128; }
-        .pb-safe { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); }
+        /* 하단바 높이만큼 여백 확보 */
+        .pb-safe { padding-bottom: 100px; }
     </style>
 </head>
 <body class="bg-[#F8FAFC] text-[#1A202C]">
 
     <div class="max-w-2xl mx-auto min-h-screen flex flex-col relative bg-white shadow-2xl">
         
-        <!-- 상단바 -->
         <header class="bg-white/95 backdrop-blur-md px-6 py-4 flex justify-between items-center sticky top-0 z-[100] border-b border-slate-100">
-            <h1 class="text-2xl font-900 brand-navy tracking-tighter" onclick="location.reload()">Quest-K</h1>
+            <h1 class="text-2xl font-900 brand-navy tracking-tighter cursor-pointer" onclick="location.reload()">MeoGo</h1>
             <div class="flex items-center gap-3">
                 <div class="text-right">
                     <div class="text-[10px] font-800 text-slate-400 uppercase leading-none mb-1">GUEST</div>
                     <div class="text-sm font-900 brand-green">1,250P</div> 
                 </div>
                 <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=QuestK" alt="avatar">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=MeoGo" alt="avatar">
                 </div>
             </div>
         </header>
 
-        <main class="flex-grow pb-safe">
-            <!-- 배너 -->
+        <main id="main-content" class="flex-grow pb-safe">
             <section class="px-6 mt-6">
                 <div class="bg-brand-navy rounded-[2rem] p-8 text-white h-44 flex flex-col justify-center relative overflow-hidden shadow-lg">
                     <h2 class="text-2xl font-900 leading-tight z-10">광고 시청 시<br><span class="text-[#89FFA5]">포인트 2배</span> 보상!</h2>
@@ -74,36 +73,33 @@
                 </div>
             </section>
 
-            <!-- 지역 섹션 -->
             <section class="px-6 mt-10">
                 <h3 class="text-lg font-900 brand-navy mb-5 flex items-center gap-2"><span class="w-1.5 h-5 bg-brand-green rounded-full"></span>어디로 가시나요?</h3>
                 <div class="grid grid-cols-4 gap-3">
-                    <div class="category-card" onclick="goToMissions('region', '서울')"><div class="icon-wrapper">🏙️</div><span class="text-[0.7rem] font-800 text-slate-700">서울</span></div>
-                    <div class="category-card" onclick="goToMissions('region', '경기')"><div class="icon-wrapper">🏰</div><span class="text-[0.7rem] font-800 text-slate-700">경기</span></div>
-                    <div class="category-card" onclick="goToMissions('region', '강원')"><div class="icon-wrapper">🌲</div><span class="text-[0.7rem] font-800 text-slate-700">강원</span></div>
-                    <div class="category-card" onclick="goToMissions('region', '충청')"><div class="icon-wrapper">🌾</div><span class="text-[0.7rem] font-800 text-slate-700">충청</span></div>
-                    <div class="category-card" onclick="goToMissions('region', '전라')"><div class="icon-wrapper">🥘</div><span class="text-[0.7rem] font-800 text-slate-700">전라</span></div>
-                    <div class="category-card" onclick="goToMissions('region', '경상')"><div class="icon-wrapper">⚓</div><span class="text-[0.7rem] font-800 text-slate-700">경상</span></div>
-                    <div class="category-card" onclick="goToMissions('region', '제주')"><div class="icon-wrapper">🗿</div><span class="text-[0.7rem] font-800 text-slate-700">제주</span></div>
-                    <div class="category-card" onclick="goToMissions('region', '전국')"><div class="icon-wrapper">🌍</div><span class="text-[0.7rem] font-800 text-slate-700">전국</span></div>
+                    <div class="category-card" onclick="loadMissionPage('region', '서울')"><div class="icon-wrapper">🏙️</div><span class="text-[0.7rem] font-800 text-slate-700">서울</span></div>
+                    <div class="category-card" onclick="loadMissionPage('region', '경기')"><div class="icon-wrapper">🏰</div><span class="text-[0.7rem] font-800 text-slate-700">경기</span></div>
+                    <div class="category-card" onclick="loadMissionPage('region', '강원')"><div class="icon-wrapper">🌲</div><span class="text-[0.7rem] font-800 text-slate-700">강원</span></div>
+                    <div class="category-card" onclick="loadMissionPage('region', '충청')"><div class="icon-wrapper">🌾</div><span class="text-[0.7rem] font-800 text-slate-700">충청</span></div>
+                    <div class="category-card" onclick="loadMissionPage('region', '전라')"><div class="icon-wrapper">🥘</div><span class="text-[0.7rem] font-800 text-slate-700">전라</span></div>
+                    <div class="category-card" onclick="loadMissionPage('region', '경상')"><div class="icon-wrapper">⚓</div><span class="text-[0.7rem] font-800 text-slate-700">경상</span></div>
+                    <div class="category-card" onclick="loadMissionPage('region', '제주')"><div class="icon-wrapper">🗿</div><span class="text-[0.7rem] font-800 text-slate-700">제주</span></div>
+                    <div class="category-card" onclick="loadMissionPage('region', '전국')"><div class="icon-wrapper">🌍</div><span class="text-[0.7rem] font-800 text-slate-700">전국</span></div>
                 </div>
             </section>
 
-            <!-- 카테고리 섹션 -->
             <section class="px-6 mt-10 mb-6">
                 <h3 class="text-lg font-900 brand-navy mb-5 flex items-center gap-2"><span class="w-1.5 h-5 bg-brand-green rounded-full"></span>무엇을 하고 싶나요?</h3>
                 <div class="grid grid-cols-4 gap-3">
-                    <div class="category-card" onclick="goToMissions('category', 'Food')"><div class="icon-wrapper">🍱</div><span class="text-[0.7rem] font-800 text-slate-700">음식</span></div>
-                    <div class="category-card" onclick="goToMissions('category', 'Nature')"><div class="icon-wrapper">🏔️</div><span class="text-[0.7rem] font-800 text-slate-700">자연</span></div>
-                    <div class="category-card" onclick="goToMissions('category', 'History')"><div class="icon-wrapper">📜</div><span class="text-[0.7rem] font-800 text-slate-700">역사</span></div>
-                    <div class="category-card" onclick="goToMissions('category', 'K-Life')"><div class="icon-wrapper">🏠</div><span class="text-[0.7rem] font-800 text-slate-700">K-라이프</span></div>
+                    <div class="category-card" onclick="loadMissionPage('category', 'Food')"><div class="icon-wrapper">🍱</div><span class="text-[0.7rem] font-800 text-slate-700">음식</span></div>
+                    <div class="category-card" onclick="loadMissionPage('category', 'Nature')"><div class="icon-wrapper">🏔️</div><span class="text-[0.7rem] font-800 text-slate-700">자연</span></div>
+                    <div class="category-card" onclick="loadMissionPage('category', 'History')"><div class="icon-wrapper">📜</div><span class="text-[0.7rem] font-800 text-slate-700">역사</span></div>
+                    <div class="category-card" onclick="loadMissionPage('category', 'K-Life')"><div class="icon-wrapper">🏠</div><span class="text-[0.7rem] font-800 text-slate-700">K-라이프</span></div>
                 </div>
             </section>
         </main>
 
-        <!-- 하단바 -->
         <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/98 backdrop-blur-xl border-t border-slate-100 px-6 py-4 flex justify-between items-center z-50 rounded-t-[2rem] shadow-2xl">
-            <button class="nav-item active"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg><span>미션</span></button>
+            <button class="nav-item active" onclick="location.reload()"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg><span>미션</span></button>
             <button class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg><span>찜</span></button>
             <button class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg><span>기록</span></button>
             <button class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg><span>마이</span></button>
@@ -111,8 +107,30 @@
     </div>
 
     <script>
-        function goToMissions(type, value) {
-            location.href = `Mission.html?type=${type}&value=${encodeURIComponent(value)}`;
+        // 본문만 교체하는 핵심 함수
+        async function loadMissionPage(type, value) {
+            try {
+                const response = await fetch('Mission.html');
+                const text = await response.text();
+                
+                // HTML 파싱하여 mission-container 부분만 추출
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const content = doc.getElementById('mission-container');
+                
+                if (content) {
+                    const mainArea = document.getElementById('main-content');
+                    mainArea.innerHTML = content.innerHTML;
+                    
+                    // 스크립트 재실행 및 필터 적용을 위한 이벤트 발생
+                    // Mission.html에 정의될 initializeMissions 함수를 호출합니다.
+                    if (typeof window.initMissions === 'function') {
+                        window.initMissions(type, value);
+                    }
+                }
+            } catch (error) {
+                console.error('페이지 로드 실패:', error);
+            }
         }
     </script>
 </body>
