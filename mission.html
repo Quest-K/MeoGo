@@ -6,45 +6,156 @@
     <title>MeoGo | Find Missions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;900&display=swap');
-        body { font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; letter-spacing: -0.02em; }
-        .brand-navy { color: #0A1931; } .brand-green { color: #1E5128; }
-        .filter-btn { padding: 0.5rem 1rem; border-radius: 99px; font-size: 0.875rem; font-weight: 700; border: 1px solid #e2e8f0; background: white; color: #64748b; white-space: nowrap; transition: all 0.2s; }
-        .filter-btn.active { background: #1E5128; color: white; border-color: #1E5128; }
+        
+        :root {
+            --brand-navy: #0A1931;
+            --brand-green: #2D6A4F;
+            --bg-soft: #F8FAFC;
+        }
+
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+            letter-spacing: -0.02em; 
+            background-color: var(--bg-soft);
+        }
+
+        /* 필터 버튼 디자인 */
+        .filter-btn { 
+            padding: 0.6rem 1.1rem; 
+            border-radius: 14px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            border: 1px solid #e2e8f0; 
+            background: white; 
+            color: #64748b; 
+            white-space: nowrap; 
+            transition: all 0.2s ease;
+        }
+        .filter-btn.active { 
+            background: var(--brand-navy); 
+            color: white; 
+            border-color: var(--brand-navy);
+            box-shadow: 0 4px 12px rgba(10, 25, 49, 0.1);
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #94a3b8; font-weight: 700; flex: 1; text-decoration: none; }
-        .nav-item.active { color: #1E5128; }
+        
+        /* 미션 카드 스타일 */
+        .mission-card { 
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.75rem;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        /* 카테고리별 태그 색상 정의 */
+        .tag-food { background-color: rgba(239, 68, 68, 0.1); color: #EF4444; }
+        .tag-life { background-color: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+        .tag-history { background-color: rgba(139, 69, 19, 0.1); color: #8B4513; }
+        .tag-nature { background-color: rgba(16, 185, 129, 0.1); color: #10B981; }
+        .tag-region { background-color: #F1F5F9; color: #64748B; }
+        
+        /* 찜 버튼 */
+        .wish-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: #F8FAFC;
+            color: #CBD5E1;
+            transition: all 0.2s;
+        }
+        .wish-btn.active {
+            background: #FFF1F2;
+            color: #FB7185;
+        }
+
+        /* 완료 버튼 (크기 최적화) */
+        .complete-btn {
+            padding: 0.75rem 1.4rem;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            background: var(--brand-green);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.2s;
+        }
+        .complete-btn:active { transform: scale(0.96); }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+        }
+
+        /* 하단 네비게이션 (index.html 스타일 고정) */
+        .nav-item { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-size: 0.75rem; 
+            color: #94A3B8; 
+            font-weight: 700; 
+            flex: 1; 
+            text-decoration: none;
+        }
+        .nav-item.active { color: var(--brand-green); }
     </style>
 </head>
-<body class="bg-[#F8FAFC]">
-    <div class="max-w-2xl mx-auto min-h-screen flex flex-col bg-white shadow-2xl relative">
-        <!-- 헤더 및 정밀 필터 -->
-        <header class="sticky top-0 bg-white/95 z-40 backdrop-blur-md border-b border-slate-100">
-            <div class="px-6 py-4 flex justify-between items-center">
-                <h1 class="text-xl font-900 brand-navy">Missions</h1>
-                <span id="mission-count" class="text-xs font-900 bg-slate-100 text-slate-500 px-3 py-1 rounded-full">-</span>
+<body class="bg-slate-50">
+    <div class="max-w-2xl mx-auto min-h-screen flex flex-col bg-white shadow-sm relative">
+        
+        <!-- 헤더 및 필터 섹션 -->
+        <header class="sticky top-0 z-40 glass-header border-b border-slate-100">
+            <div class="px-6 py-6 flex justify-between items-end">
+                <div>
+                    <h1 class="text-3xl font-900 text-[101931] tracking-tight">Mission</h1>
+                    <p class="text-[12px] font-700 text-slate-400 uppercase tracking-widest mt-1">Explore Korea</p>
+                </div>
+                <span id="mission-count" class="text-xs font-800 bg-slate-100 text-slate-500 px-3.5 py-2 rounded-xl border border-slate-200">-</span>
             </div>
-            <!-- 지역 필터 (한글) -->
-            <div class="px-6 pb-2 overflow-x-auto flex gap-2 no-scrollbar" id="region-filters"></div>
-            <!-- 카테고리 필터 (매핑) -->
-            <div class="px-6 pb-4 overflow-x-auto flex gap-2 no-scrollbar" id="category-filters"></div>
+            
+            <div class="space-y-3 pb-5">
+                <div class="px-6 overflow-x-auto flex gap-2 no-scrollbar" id="region-filters"></div>
+                <div class="px-6 overflow-x-auto flex gap-2 no-scrollbar" id="category-filters"></div>
+            </div>
         </header>
 
-        <main class="flex-grow pb-24">
-            <div id="mission-list" class="px-6 pt-6 space-y-4">
-                <div class="text-center py-20 text-slate-400 font-700">Loading missions...</div>
+        <!-- 메인 미션 리스트 -->
+        <main class="flex-grow pb-32">
+            <div id="mission-list" class="px-6 pt-6 space-y-6">
+                <div class="text-center py-24 text-slate-400 font-700">Loading missions...</div>
             </div>
         </main>
 
-        <!-- 네비게이션 -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white border-t border-slate-100 px-6 py-4 flex justify-between items-center z-50 rounded-t-[2rem] shadow-2xl">
-            <a href="index.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>홈</span></a>
-            <a href="mission.html" class="nav-item active"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><span>탐색</span></a>
-            <a href="wishlist.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg><span>찜</span></a>
-            <a href="mypage.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span>마이</span></a>
+        <!-- 하단 네비게이션 -->
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/98 border-t border-slate-100 px-6 py-5 flex justify-between items-center z-50 rounded-t-[2rem] shadow-lg">
+            <a href="index.html" class="nav-item">
+                <i class="fa-solid fa-house text-xl mb-1.5"></i><span>홈</span>
+            </a>
+            <a href="mission.html" class="nav-item active">
+                <i class="fa-solid fa-compass text-xl mb-1.5"></i><span>탐색</span>
+            </a>
+            <a href="wishlist.html" class="nav-item">
+                <i class="fa-solid fa-heart text-xl mb-1.5"></i><span>찜</span>
+            </a>
+            <a href="mypage.html" class="nav-item">
+                <i class="fa-solid fa-user text-xl mb-1.5"></i><span>마이</span>
+            </a>
         </nav>
     </div>
+
+    <!-- 알림용 토스트 -->
+    <div id="toast" class="fixed bottom-28 left-1/2 -translate-x-1/2 z-[100] bg-slate-900/95 text-white px-7 py-4 rounded-2xl text-[14px] font-bold shadow-2xl opacity-0 pointer-events-none transition-all duration-300"></div>
 
     <script>
         const SUPABASE_URL = 'https://xyyoeovwrkcwhwdmjeyx.supabase.co';
@@ -69,9 +180,18 @@
         function setRegion(r) { activeRegion = r; renderFilters(); fetchMissions(); }
         function setCategory(l) { activeCatLabel = l; renderFilters(); fetchMissions(); }
 
+        function getCategoryClass(cat) {
+            const c = cat ? cat.toLowerCase() : '';
+            if (c.includes('food')) return 'tag-food';
+            if (c.includes('life')) return 'tag-life';
+            if (c.includes('history')) return 'tag-history';
+            if (c.includes('nature')) return 'tag-nature';
+            return 'tag-region';
+        }
+
         async function fetchMissions() {
             const listDiv = document.getElementById('mission-list');
-            listDiv.innerHTML = '<div class="text-center py-20 text-slate-400 font-700">Searching...</div>';
+            listDiv.innerHTML = '<div class="flex justify-center py-24"><div class="w-8 h-8 border-[3px] border-slate-200 border-t-brand-green rounded-full animate-spin"></div></div>';
 
             try {
                 let query = _supabase.from('missions').select('*');
@@ -84,22 +204,58 @@
                 document.getElementById('mission-count').innerText = `${data.length} Missions`;
 
                 listDiv.innerHTML = data.map(m => `
-                    <div class="bg-white border border-slate-100 rounded-3xl p-5 shadow-sm">
-                        <div class="flex justify-between items-start mb-3">
+                    <div class="mission-card">
+                        <div class="flex justify-between items-start mb-4">
                             <div class="flex gap-2">
-                                <span class="text-[10px] font-900 bg-brand-green/10 text-brand-green px-2 py-1 rounded uppercase tracking-tighter">${m.category}</span>
-                                <span class="text-[10px] font-900 bg-slate-100 text-slate-500 px-2 py-1 rounded tracking-tighter">${m.region}</span>
+                                <span class="text-[11px] font-900 ${getCategoryClass(m.category)} px-3 py-1.5 rounded-xl uppercase tracking-tight">${m.category}</span>
+                                <span class="text-[11px] font-900 tag-region px-3 py-1.5 rounded-xl uppercase tracking-tight">${m.region}</span>
                             </div>
-                            <span class="text-sm font-900 text-brand-green">${m.base_points}P</span>
+                            <button onclick="toggleWishlist('${m.id}', this)" class="wish-btn">
+                                <i class="fa-solid fa-heart text-xl"></i>
+                            </button>
                         </div>
-                        <h3 class="text-lg font-900 brand-navy mb-1">${m.mission_name}</h3>
-                        <p class="text-xs font-600 text-slate-400 mb-4 line-clamp-2">${m.guide}</p>
-                        <button onclick="alert('Start!')" class="w-full bg-brand-navy text-white py-3 rounded-2xl font-800 text-sm">Start Mission</button>
+                        
+                        <h3 class="text-xl font-900 text-[#0A1931] mb-2 leading-snug">${m.mission_name}</h3>
+                        <p class="text-[15px] font-500 text-slate-500 mb-6 leading-relaxed line-clamp-3">${m.guide}</p>
+                        
+                        <div class="flex items-center justify-between pt-5 border-t border-slate-50">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-[#2D6A4F]/10 flex items-center justify-center">
+                                    <i class="fa-solid fa-coins text-[#2D6A4F] text-sm"></i>
+                                </div>
+                                <span class="text-base font-900 text-[#2D6A4F]">${m.base_points} pts</span>
+                            </div>
+                            <button onclick="completeMission('${m.id}', '${m.mission_name}')" class="complete-btn">
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span>완료</span>
+                            </button>
+                        </div>
                     </div>
                 `).join('');
             } catch (e) {
-                listDiv.innerHTML = `<div class="text-center py-20 text-red-400">Error: ${e.message}</div>`;
+                listDiv.innerHTML = `<div class="text-center py-20 text-red-400 font-bold">Error: ${e.message}</div>`;
             }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, 0)';
+            setTimeout(() => { 
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 20px)';
+            }, 2500);
+        }
+
+        function toggleWishlist(id, btn) {
+            btn.classList.toggle('active');
+            const isActive = btn.classList.contains('active');
+            showToast(isActive ? '❤️ 찜 목록에 추가되었습니다' : '💔 찜 목록에서 제거되었습니다');
+        }
+
+        function completeMission(id, name) {
+            showToast(`✨ 미션 완료: ${name}`);
         }
 
         window.onload = () => { renderFilters(); fetchMissions(); };
