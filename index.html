@@ -6,75 +6,173 @@
     <title>MeoGo | Explore Korea</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;900&display=swap');
         body { font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; letter-spacing: -0.02em; }
-        .brand-navy { color: #0A1931; }
-        .brand-green { color: #1E5128; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #94a3b8; font-weight: 700; flex: 1; text-decoration: none; }
-        .nav-item.active { color: #1E5128; }
-        .hero-gradient { background: linear-gradient(135deg, #0A1931 0%, #1E5128 100%); }
+        
+        :root {
+            --brand-navy: #0A1931;
+            --brand-green: #1E5128;
+            --point-yellow: #facc15;
+        }
+
+        .text-brand-navy { color: var(--brand-navy); }
+        .text-brand-green { color: var(--brand-green); }
+        .hero-gradient { background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-green) 100%); }
+
+        /* 타이포그래피 스타일 */
+        .acrostic-container { display: flex; flex-direction: column; gap: -2px; }
+        .acrostic-row { display: flex; align-items: baseline; letter-spacing: -0.05em; }
+        .first-letter { font-weight: 900; font-size: 1.25rem; color: var(--point-yellow); margin-right: -1px; }
+        .rest-letters { font-weight: 700; font-size: 1.05rem; color: #ffffff; }
+        .go-text { font-size: 1.85rem; font-weight: 900; color: #10b981; letter-spacing: -0.06em; margin-top: 4px; line-height: 1; }
+
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; font-weight: 700; color: #94a3b8; transition: all 0.2s; text-decoration: none; }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 2px; }
+        .nav-item.active { color: var(--brand-green); }
+
+        /* 통계 탭 스타일 */
+        .stat-tab { cursor: pointer; padding: 6px 12px; border-radius: 99px; font-size: 11px; font-weight: 800; transition: all 0.2s; }
+        .stat-tab.active { background-color: var(--brand-navy); color: white; }
+        .stat-content { display: none; }
+        .stat-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="bg-[#F8FAFC]">
     <div class="max-w-2xl mx-auto min-h-screen flex flex-col bg-white shadow-2xl relative">
-        <!-- 상단 헤더 -->
-        <header class="px-6 py-5 flex justify-between items-center sticky top-0 bg-white/95 z-50 backdrop-blur-md">
-            <h1 class="text-2xl font-900 brand-navy tracking-tighter italic">MeoGo</h1>
+        
+        <header class="px-6 py-5 flex justify-between items-center sticky top-0 bg-white/95 z-50 backdrop-blur-md border-b border-slate-50">
+            <h1 class="text-2xl font-900 text-brand-navy tracking-tighter italic cursor-pointer" onclick="location.href='index.html'">MeoGo</h1>
             <div id="user-status" class="text-xs font-800 text-slate-400">Loading...</div>
         </header>
 
-        <main class="flex-grow pb-24">
-            <!-- 히어로 섹션: 서비스 가치 제안 -->
-            <section class="px-6 py-8">
-                <div class="hero-gradient rounded-[2.5rem] p-8 text-white shadow-xl shadow-navy/20 relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h2 class="text-3xl font-900 leading-tight mb-3">Experience<br>Real Korea 🇰🇷</h2>
-                        <p class="text-white/80 font-600 text-sm mb-6">Complete missions and collect points while traveling.</p>
-                        <a href="mission.html" class="inline-block bg-white text-brand-navy px-6 py-3 rounded-full font-900 text-sm shadow-lg active:scale-95 transition-transform">Start Mission</a>
+        <main class="flex-grow pb-24 px-6 py-4">
+            
+            <div class="hero-gradient rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden mb-8">
+                <div class="flex justify-between items-end relative z-10">
+                    <div class="acrostic-container">
+                        <div class="acrostic-row"><span class="first-letter">M</span><span class="rest-letters">ission</span></div>
+                        <div class="acrostic-row"><span class="first-letter">e</span><span class="rest-letters">xperience</span></div>
+                        <div class="acrostic-row"><span class="first-letter">o</span><span class="rest-letters">rdinary</span></div>
+                        <div class="go-text">GO <span class="text-white">KOREA</span></div>
                     </div>
-                    <div class="absolute -right-4 -bottom-4 opacity-20 transform rotate-12">
-                        <svg width="150" height="150" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+                    <a href="mission.html" class="bg-white text-brand-navy px-6 py-3 rounded-full font-900 text-sm shadow-lg active:scale-95 transition-transform">Start Now</a>
+                </div>
+            </div>
+
+            <!-- 미션 현황 대시보드 (카테고리 & 지역 통합) -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4 px-1">
+                    <h3 class="text-base font-900 text-brand-navy">My Mission Status</h3>
+                    <div class="flex gap-1 bg-slate-100 p-1 rounded-full">
+                        <div onclick="switchStat('category')" id="tab-category" class="stat-tab active">Category</div>
+                        <div onclick="switchStat('region')" id="tab-region" class="stat-tab text-slate-400">Region</div>
                     </div>
                 </div>
-            </section>
 
-            <!-- 퀵 통계 / 상태 -->
-            <section class="px-6 grid grid-cols-2 gap-4 mb-8">
-                <div class="bg-slate-50 p-5 rounded-3xl border border-slate-100">
-                    <p class="text-slate-400 text-xs font-800 uppercase mb-1">Active Missions</p>
-                    <p class="text-2xl font-900 brand-navy">240+</p>
-                </div>
-                <div class="bg-slate-50 p-5 rounded-3xl border border-slate-100">
-                    <p class="text-slate-400 text-xs font-800 uppercase mb-1">My Rank</p>
-                    <p class="text-2xl font-900 brand-green" id="my-rank">-</p>
-                </div>
-            </section>
+                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <!-- 카테고리별 통계 -->
+                    <div id="stat-category-content" class="stat-content active space-y-4">
+                        <h4 class="text-[10px] font-900 text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-yellow-500"></i> Mission by Category
+                        </h4>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <div class="flex justify-between text-[11px] font-bold mb-1.5 text-brand-navy">
+                                    <span>음식 (Food)</span><span class="text-brand-green">12/20</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-green rounded-full" style="width: 60%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[11px] font-bold mb-1.5 text-brand-navy">
+                                    <span>자연 (Nature)</span><span class="text-brand-green">8/15</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-green rounded-full" style="width: 53%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[11px] font-bold mb-1.5 text-brand-navy">
+                                    <span>역사 (History)</span><span class="text-brand-green">5/10</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-green rounded-full" style="width: 50%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[11px] font-bold mb-1.5 text-brand-navy">
+                                    <span>K-라이프 (K-Life)</span><span class="text-yellow-500">13/30</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-yellow-500 rounded-full" style="width: 43%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- 추천/인기 미션 미리보기 -->
-            <section class="px-6 mb-8">
-                <div class="flex justify-between items-center mb-5">
-                    <h3 class="text-xl font-900 brand-navy tracking-tight">Today's Hot Missions</h3>
-                    <a href="mission.html" class="text-sm font-800 text-slate-400">View All</a>
-                </div>
-                <div id="featured-list" class="space-y-4">
-                    <!-- JS에서 동적 로드 -->
-                    <div class="animate-pulse flex space-x-4 bg-slate-50 p-5 rounded-2xl">
-                        <div class="flex-1 space-y-4 py-1">
-                            <div class="h-4 bg-slate-200 rounded w-3/4"></div>
-                            <div class="h-4 bg-slate-200 rounded"></div>
+                    <!-- 지역별 통계 -->
+                    <div id="stat-region-content" class="stat-content space-y-4">
+                        <h4 class="text-[10px] font-900 text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-brand-green"></i> Mission by Region
+                        </h4>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-4">
+                            <!-- 8가지 지역 -->
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>서울</span><span>4/10</span></div>
+                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 40%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>경기</span><span>2/8</span></div>
+                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 25%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>강원</span><span>1/5</span></div>
+                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 20%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>충청</span><span>0/5</span></div>
+                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 0%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>전라</span><span>3/7</span></div>
+                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 42%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>경상</span><span>5/12</span></div>
+                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 41%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>제주</span><span>8/10</span></div>
+                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 80%;"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>전국</span><span>10/20</span></div>
+                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 50%;"></div></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <div class="flex justify-between items-center mb-5 px-1">
+                <h3 class="text-lg font-900 text-brand-navy tracking-tight">Today's Hot Missions</h3>
+                <a href="mission.html" class="text-sm font-800 text-slate-400">View All</a>
+            </div>
+            <div id="featured-list" class="space-y-4">
+                <div class="animate-pulse bg-slate-50 h-24 rounded-3xl"></div>
+            </div>
+
         </main>
 
-        <!-- 네비게이션 -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white border-t border-slate-100 px-6 py-4 flex justify-between items-center z-50 rounded-t-[2rem] shadow-2xl">
-            <a href="index.html" class="nav-item active"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>홈</span></a>
-            <a href="mission.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><span>탐색</span></a>
-            <a href="wishlist.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg><span>찜</span></a>
-            <a href="mypage.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span>마이</span></a>
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/90 border-t border-slate-100 px-6 py-4 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] backdrop-blur-lg">
+            <a href="index.html" class="nav-item active">
+                <i class="fa-solid fa-house"></i><span>홈</span>
+            </a>
+            <a href="mission.html" class="nav-item">
+                <i class="fa-solid fa-compass"></i><span>탐색</span>
+            </a>
+            <a href="wishlist.html" class="nav-item">
+                <i class="fa-solid fa-heart"></i><span>찜</span>
+            </a>
+            <a href="mypage.html" class="nav-item">
+                <i class="fa-solid fa-circle-user"></i><span>마이</span>
+            </a>
         </nav>
     </div>
 
@@ -83,39 +181,54 @@
         const SUPABASE_KEY = 'sb_publishable_Jm_XX_GapNRJEdlQGBP7hw_JqdtHkjX';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function initHome() {
-            // 세션 체크
-            const { data: { session } } = await _supabase.auth.getSession();
-            const statusEl = document.getElementById('user-status');
-            if (session) {
-                statusEl.innerText = session.user.email.split('@')[0];
-                loadUserStats(session.user.id);
-            } else {
-                statusEl.innerHTML = '<a href="mypage.html" class="text-brand-green underline">Sign In</a>';
-            }
-            loadFeaturedMissions();
+        // 통계 탭 전환 함수
+        function switchStat(type) {
+            document.querySelectorAll('.stat-tab').forEach(el => {
+                el.classList.remove('active', 'text-white');
+                el.classList.add('text-slate-400');
+            });
+            document.querySelectorAll('.stat-content').forEach(el => el.classList.remove('active'));
+
+            document.getElementById('tab-' + type).classList.add('active');
+            document.getElementById('tab-' + type).classList.remove('text-slate-400');
+            document.getElementById('stat-' + type + '-content').classList.add('active');
         }
 
-        async function loadUserStats(userId) {
-            const { data } = await _supabase.from('profiles').select('total_points').eq('id', userId).single();
-            if (data) document.getElementById('my-rank').innerText = `${data.total_points}P`;
+        async function initHome() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            const statusEl = document.getElementById('user-status');
+            
+            if (session) {
+                statusEl.innerText = session.user.email.split('@')[0];
+            } else {
+                statusEl.innerHTML = '<a href="mypage.html" class="text-brand-green font-900 underline">Sign In</a>';
+            }
+            loadFeaturedMissions();
         }
 
         async function loadFeaturedMissions() {
             const { data } = await _supabase.from('missions').select('*').limit(3);
             const listDiv = document.getElementById('featured-list');
+            
             if (data) {
                 listDiv.innerHTML = data.map(m => `
-                    <div class="bg-white border border-slate-100 p-4 rounded-3xl flex items-center gap-4 shadow-sm">
-                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center font-900 brand-green text-xs uppercase">${m.category[0]}</div>
+                    <div class="bg-white border border-slate-100 p-4 rounded-3xl flex items-center gap-4 shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="location.href='mission.html'">
+                        <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center font-900 text-brand-green text-lg">
+                            ${getCategoryEmoji(m.category)}
+                        </div>
                         <div class="flex-grow">
-                            <h4 class="font-900 brand-navy text-sm mb-1">${m.mission_name}</h4>
-                            <p class="text-[10px] font-700 text-slate-400 uppercase tracking-widest">${m.region}</p>
+                            <h4 class="font-900 text-brand-navy text-sm mb-1">${m.mission_name}</h4>
+                            <p class="text-[10px] font-800 text-slate-400 uppercase tracking-widest">${m.region} · ${m.category}</p>
                         </div>
                         <div class="text-brand-green font-900 text-xs">${m.base_points}P</div>
                     </div>
                 `).join('');
             }
+        }
+
+        function getCategoryEmoji(cat) {
+            const map = { '음식': '🍱', '자연': '⛰️', '역사': '🏛️', 'K라이프': '📱' };
+            return map[cat] || '🇰🇷';
         }
 
         window.onload = initHome;
