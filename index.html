@@ -28,8 +28,9 @@
         .rest-letters { font-weight: 700; font-size: 1.05rem; color: #ffffff; }
         .go-text { font-size: 1.85rem; font-weight: 900; color: #10b981; letter-spacing: -0.06em; margin-top: 4px; line-height: 1; }
 
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; font-weight: 700; color: #94a3b8; transition: all 0.2s; text-decoration: none; }
-        .nav-item i { font-size: 1.2rem; margin-bottom: 2px; }
+        /* 하단 네비게이션 스타일 */
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; font-weight: 700; color: #94a3b8; transition: all 0.2s; text-decoration: none; }
+        .nav-item i { font-size: 1.25rem; margin-bottom: 4px; }
         .nav-item.active { color: var(--brand-green); }
 
         /* 통계 탭 스타일 */
@@ -48,7 +49,7 @@
             <div id="user-status" class="text-xs font-800 text-slate-400">Loading...</div>
         </header>
 
-        <main class="flex-grow pb-24 px-6 py-4">
+        <main class="flex-grow pb-32 px-6 py-4">
             
             <div class="hero-gradient rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden mb-8">
                 <div class="flex justify-between items-end relative z-10">
@@ -62,7 +63,6 @@
                 </div>
             </div>
 
-            <!-- 미션 현황 대시보드 (카테고리 & 지역 통합) -->
             <section class="mb-8">
                 <div class="flex items-center justify-between mb-4 px-1">
                     <h3 class="text-base font-900 text-brand-navy">My Mission Status</h3>
@@ -73,7 +73,6 @@
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                    <!-- 카테고리별 통계 -->
                     <div id="stat-category-content" class="stat-content active space-y-4">
                         <h4 class="text-[10px] font-900 text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
                             <i class="fa-solid fa-layer-group text-yellow-500"></i> Mission by Category
@@ -106,46 +105,20 @@
                         </div>
                     </div>
 
-                    <!-- 지역별 통계 -->
                     <div id="stat-region-content" class="stat-content space-y-4">
                         <h4 class="text-[10px] font-900 text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
                             <i class="fa-solid fa-map-location-dot text-brand-green"></i> Mission by Region
                         </h4>
                         <div class="grid grid-cols-2 gap-x-6 gap-y-4">
-                            <!-- 8가지 지역 -->
                             <div>
                                 <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>서울</span><span>4/10</span></div>
                                 <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 40%;"></div></div>
                             </div>
                             <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>경기</span><span>2/8</span></div>
-                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 25%;"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>강원</span><span>1/5</span></div>
-                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 20%;"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>충청</span><span>0/5</span></div>
-                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 0%;"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>전라</span><span>3/7</span></div>
-                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 42%;"></div></div>
-                            </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>경상</span><span>5/12</span></div>
-                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 41%;"></div></div>
-                            </div>
-                            <div>
                                 <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>제주</span><span>8/10</span></div>
                                 <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 80%;"></div></div>
                             </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>전국</span><span>10/20</span></div>
-                                <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 50%;"></div></div>
                             </div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -160,7 +133,7 @@
 
         </main>
 
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/90 border-t border-slate-100 px-6 py-4 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] backdrop-blur-lg">
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white/80 border-t border-slate-100 px-6 py-5 flex justify-between items-center z-50 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl">
             <a href="index.html" class="nav-item active">
                 <i class="fa-solid fa-house"></i><span>홈</span>
             </a>
@@ -181,14 +154,12 @@
         const SUPABASE_KEY = 'sb_publishable_Jm_XX_GapNRJEdlQGBP7hw_JqdtHkjX';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // 통계 탭 전환 함수
         function switchStat(type) {
             document.querySelectorAll('.stat-tab').forEach(el => {
                 el.classList.remove('active', 'text-white');
                 el.classList.add('text-slate-400');
             });
             document.querySelectorAll('.stat-content').forEach(el => el.classList.remove('active'));
-
             document.getElementById('tab-' + type).classList.add('active');
             document.getElementById('tab-' + type).classList.remove('text-slate-400');
             document.getElementById('stat-' + type + '-content').classList.add('active');
@@ -197,7 +168,6 @@
         async function initHome() {
             const { data: { session } } = await _supabase.auth.getSession();
             const statusEl = document.getElementById('user-status');
-            
             if (session) {
                 statusEl.innerText = session.user.email.split('@')[0];
             } else {
@@ -209,11 +179,10 @@
         async function loadFeaturedMissions() {
             const { data } = await _supabase.from('missions').select('*').limit(3);
             const listDiv = document.getElementById('featured-list');
-            
             if (data) {
                 listDiv.innerHTML = data.map(m => `
-                    <div class="bg-white border border-slate-100 p-4 rounded-3xl flex items-center gap-4 shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="location.href='mission.html'">
-                        <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center font-900 text-brand-green text-lg">
+                    <div class="bg-white border border-slate-100 p-5 rounded-3xl flex items-center gap-4 shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="location.href='mission.html'">
+                        <div class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl">
                             ${getCategoryEmoji(m.category)}
                         </div>
                         <div class="flex-grow">
@@ -227,7 +196,7 @@
         }
 
         function getCategoryEmoji(cat) {
-            const map = { '음식': '🍱', '자연': '⛰️', '역사': '🏛️', 'K라이프': '📱' };
+            const map = { '음식': '🍱', '자연': '⛰️', '역사': '🏛️', 'K라이프': '📱', 'K-Food': '🍱', 'K-Life': '📱', 'History': '🏛️', 'Nature': '⛰️' };
             return map[cat] || '🇰🇷';
         }
 
