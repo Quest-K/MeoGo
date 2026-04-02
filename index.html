@@ -21,27 +21,23 @@
         .text-brand-green { color: var(--brand-green); }
         .hero-gradient { background: linear-gradient(135deg, var(--brand-navy) 0%, var(--brand-green) 100%); }
 
-        .acrostic-container { display: flex; flex-direction: column; gap: -2px; }
-        .acrostic-row { display: flex; align-items: baseline; letter-spacing: -0.05em; }
-        .first-letter { font-weight: 900; font-size: 1.25rem; color: var(--point-yellow); margin-right: -1px; }
-        .rest-letters { font-weight: 700; font-size: 1.05rem; color: #ffffff; }
-        .go-text { font-size: 1.85rem; font-weight: 900; color: #10b981; letter-spacing: -0.06em; margin-top: 4px; line-height: 1; }
-
-        /* 하단 네비게이션 고정 */
+        /* 하단 네비게이션 스타일 */
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; font-weight: 700; color: #94a3b8; transition: all 0.2s; cursor: pointer; }
         .nav-item i { font-size: 1.25rem; margin-bottom: 4px; }
         .nav-item.active { color: var(--brand-green); }
 
-        .stat-tab { cursor: pointer; padding: 6px 12px; border-radius: 99px; font-size: 11px; font-weight: 800; transition: all 0.2s; }
-        .stat-tab.active { background-color: var(--brand-navy); color: white; }
-        .stat-content { display: none; }
-        .stat-content.active { display: block; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* 페이지 전환 애니메이션 */
+        .page-fade { animation: fadeIn 0.35s ease-out; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(8px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
         ::-webkit-scrollbar { display: none; }
-        
-        /* 페이지 전환 애니메이션 */
-        .page-fade { animation: fadeIn 0.4s ease-in-out; }
+        .stat-tab { cursor: pointer; padding: 6px 12px; border-radius: 99px; font-size: 11px; font-weight: 800; }
+        .stat-tab.active { background-color: var(--brand-navy); color: white; }
+        .stat-content { display: none; }
+        .stat-content.active { display: block; }
     </style>
 </head>
 <body class="bg-[#F8FAFC]">
@@ -76,143 +72,102 @@
         const SUPABASE_KEY = 'sb_publishable_Jm_XX_GapNRJEdlQGBP7hw_JqdtHkjX';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // 페이지 로드 엔진
+        /**
+         * 페이지 전환 핵심 함수
+         */
         async function loadPage(pageName) {
             const contentArea = document.getElementById('content-area');
             
-            // 네비게이션 활성화 표시 변경
+            // 1. 네비게이션 활성 상태 업데이트
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            const activeNav = document.getElementById('nav-' + (pageName === 'home' ? 'home' : (pageName === 'mission' ? 'mission' : pageName === 'wishlist' ? 'wish' : 'my')));
-            if(activeNav) activeNav.classList.add('active');
+            const targetNavId = pageName === 'home' ? 'nav-home' : 
+                                pageName === 'mission' ? 'nav-mission' : 
+                                pageName === 'wishlist' ? 'nav-wish' : 'nav-my';
+            document.getElementById(targetNavId)?.classList.add('active');
 
+            // 2. 콘텐츠 렌더링
             if (pageName === 'home') {
-                contentArea.innerHTML = renderHomeHtml();
-                contentArea.classList.add('page-fade');
-                initHomeData();
+                contentArea.innerHTML = `<div class="page-fade">${renderHomeHtml()}</div>`;
+                initHomeData(); // 홈 전용 데이터 로드
             } else {
+                // 로딩 표시
+                contentArea.innerHTML = `<div class="flex justify-center items-center py-20 text-slate-300"><i class="fa-solid fa-circle-notch fa-spin text-3xl"></i></div>`;
+                
                 try {
-                    // mission.html 등 외부 파일을 가져와서 main 안에 삽입
-                    // 주의: 외부 파일은 <body> 내부 태그만 포함하거나 적절히 파싱해야 함
-                    const response = await fetch(`${pageName}.html`);
-                    const html = await response.text();
+                    // 동일 폴더의 html 파일을 가져옴
+                    const response = await fetch(`./${pageName}.html`);
+                    if (!response.ok) throw new Error('File not found');
                     
-                    // 가져온 HTML에서 필요한 부분(main 태그 안쪽 등)만 추출하거나 전체 삽입
+                    const htmlText = await response.text();
                     const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const newContent = doc.querySelector('main') ? doc.querySelector('main').innerHTML : html;
+                    const doc = parser.parseFromString(htmlText, 'text/html');
                     
-                    contentArea.innerHTML = `<div class="page-fade">${newContent}</div>`;
-                } catch (error) {
-                    contentArea.innerHTML = `<div class="p-10 text-center text-slate-400">준비 중인 페이지입니다.</div>`;
+                    // 불러온 파일에서 <main> 태그 안쪽만 추출 (없으면 body 전체)
+                    const newHtml = doc.querySelector('main') ? doc.querySelector('main').innerHTML : doc.body.innerHTML;
+                    
+                    contentArea.innerHTML = `<div class="page-fade">${newHtml}</div>`;
+                    
+                    // 만약 mission.html 로드 시 실행해야 할 스크립트가 있다면 여기서 트리거 가능
+                    // 예: if(pageName === 'mission') initMissionPage();
+                } catch (err) {
+                    console.error("Page Load Error:", err);
+                    contentArea.innerHTML = `<div class="p-10 text-center text-slate-400">페이지를 찾을 수 없습니다. (${pageName}.html)</div>`;
                 }
             }
             window.scrollTo(0, 0);
         }
 
-        // 초기 홈 화면 레이아웃 (기존의 main 내용을 함수로 분리)
+        /**
+         * 홈 화면 기본 구조 (정적)
+         */
         function renderHomeHtml() {
             return `
             <div class="px-6 py-4">
                 <div class="hero-gradient rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden mb-8">
                     <div class="flex justify-between items-end relative z-10">
                         <div class="acrostic-container">
-                            <div class="acrostic-row"><span class="first-letter">M</span><span class="rest-letters">ission</span></div>
-                            <div class="acrostic-row"><span class="first-letter">e</span><span class="rest-letters">xperience</span></div>
-                            <div class="acrostic-row"><span class="first-letter">o</span><span class="rest-letters">rdinary</span></div>
-                            <div class="go-text">GO <span class="text-white">KOREA</span></div>
+                            <div class="flex items-baseline"><span class="font-900 text-xl text-yellow-400 mr-1">M</span><span class="font-700 text-sm">ission</span></div>
+                            <div class="flex items-baseline"><span class="font-900 text-xl text-yellow-400 mr-1">e</span><span class="font-700 text-sm">xperience</span></div>
+                            <div class="flex items-baseline"><span class="font-900 text-xl text-yellow-400 mr-1">o</span><span class="font-700 text-sm">rdinary</span></div>
+                            <div class="text-3xl font-900 text-emerald-400 mt-2">GO <span class="text-white">KOREA</span></div>
                         </div>
                         <button onclick="loadPage('mission')" class="bg-white text-brand-navy px-6 py-3 rounded-full font-900 text-sm shadow-lg active:scale-95 transition-transform">Start Now</button>
                     </div>
                 </div>
 
-                <section class="mb-8">
-                    <div class="flex items-center justify-between mb-4 px-1">
-                        <h3 class="text-base font-900 text-brand-navy">My Mission Status</h3>
-                        <div class="flex gap-1 bg-slate-100 p-1 rounded-full">
-                            <div onclick="switchStat('category')" id="tab-category" class="stat-tab active">Category</div>
-                            <div onclick="switchStat('region')" id="tab-region" class="stat-tab text-slate-400">Region</div>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                        <div id="stat-category-content" class="stat-content active space-y-4">
-                            <h4 class="text-[10px] font-900 text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-layer-group text-yellow-500"></i> Mission by Category
-                            </h4>
-                            <div class="grid grid-cols-1 gap-4">
-                                <div>
-                                    <div class="flex justify-between text-[11px] font-bold mb-1.5 text-brand-navy">
-                                        <span>음식 (Food)</span><span class="text-brand-green">12/20</span>
-                                    </div>
-                                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-green rounded-full" style="width: 60%;"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-[11px] font-bold mb-1.5 text-brand-navy">
-                                        <span>자연 (Nature)</span><span class="text-brand-green">8/15</span>
-                                    </div>
-                                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-green rounded-full" style="width: 53%;"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-[11px] font-bold mb-1.5 text-brand-navy">
-                                        <span>역사 (History)</span><span class="text-brand-green">5/10</span>
-                                    </div>
-                                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-green rounded-full" style="width: 50%;"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-[11px] font-bold mb-1.5 text-brand-navy">
-                                        <span>K-라이프 (K-Life)</span><span class="text-yellow-500">13/30</span>
-                                    </div>
-                                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-yellow-500 rounded-full" style="width: 43%;"></div></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="stat-region-content" class="stat-content space-y-4">
-                            <h4 class="text-[10px] font-900 text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-map-location-dot text-brand-green"></i> Mission by Region
-                            </h4>
-                            <div class="grid grid-cols-2 gap-x-6 gap-y-4">
-                                <div>
-                                    <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>서울</span><span>4/10</span></div>
-                                    <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 40%;"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-[10px] font-bold mb-1 text-brand-navy"><span>제주</span><span>8/10</span></div>
-                                    <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-brand-navy" style="width: 80%;"></div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
                 <div class="flex justify-between items-center mb-5 px-1">
                     <h3 class="text-lg font-900 text-brand-navy tracking-tight">Today's Hot Missions</h3>
                     <button onclick="loadPage('mission')" class="text-sm font-800 text-slate-400">View All</button>
                 </div>
+                
                 <div id="featured-list" class="space-y-4">
+                    <div class="animate-pulse bg-slate-50 h-24 rounded-3xl"></div>
                     <div class="animate-pulse bg-slate-50 h-24 rounded-3xl"></div>
                 </div>
             </div>`;
         }
 
-        // 홈 화면 데이터 초기화
+        /**
+         * 홈 전용 실시간 데이터 로드 (Supabase)
+         */
         async function initHomeData() {
+            // 유저 세션 확인
             const { data: { session } } = await _supabase.auth.getSession();
             const statusEl = document.getElementById('user-status');
             if (session) {
                 statusEl.innerText = session.user.email.split('@')[0];
             } else {
-                statusEl.innerHTML = '<button onclick="loadPage(\'mypage\')" class="text-brand-green font-900 underline">Sign In</button>';
+                statusEl.innerHTML = `<span onclick="loadPage('mypage')" class="text-brand-green font-900 underline cursor-pointer">Sign In</span>`;
             }
-            loadFeaturedMissions();
-        }
 
-        async function loadFeaturedMissions() {
+            // 미션 리스트 로드
             const { data } = await _supabase.from('missions').select('*').limit(3);
             const listDiv = document.getElementById('featured-list');
             if (data && listDiv) {
                 listDiv.innerHTML = data.map(m => `
                     <div class="bg-white border border-slate-100 p-5 rounded-3xl flex items-center gap-4 shadow-sm active:scale-[0.98] transition-transform cursor-pointer" onclick="loadPage('mission')">
                         <div class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl">
-                            ${getCategoryEmoji(m.category)}
+                            ${m.category.includes('음식') ? '🍱' : m.category.includes('자연') ? '⛰️' : '🏛️'}
                         </div>
                         <div class="flex-grow">
                             <h4 class="font-900 text-brand-navy text-sm mb-1">${m.mission_name}</h4>
@@ -224,23 +179,7 @@
             }
         }
 
-        function switchStat(type) {
-            document.querySelectorAll('.stat-tab').forEach(el => {
-                el.classList.remove('active');
-                el.classList.add('text-slate-400');
-            });
-            document.querySelectorAll('.stat-content').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + type).classList.add('active');
-            document.getElementById('tab-' + type).classList.remove('text-slate-400');
-            document.getElementById('stat-' + type + '-content').classList.add('active');
-        }
-
-        function getCategoryEmoji(cat) {
-            const map = { '음식': '🍱', '자연': '⛰️', '역사': '🏛️', 'K라이프': '📱' };
-            return map[cat] || '🇰🇷';
-        }
-
-        // 앱 시작 시 홈 로드
+        // 초기 실행
         window.onload = () => loadPage('home');
     </script>
 </body>
